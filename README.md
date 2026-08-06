@@ -73,11 +73,11 @@ neben dem Bild und oberhalb davon.
 ## Einblenden beim Seitenaufruf
 
 Die Hero-Blöcke fahren beim Laden von unten ein — übernommen aus der Vorlage:
-`opacity 0 → 1`, `translateY(20px) → 0`, **400 ms**,
-`cubic-bezier(.33, 1, .68, 1)`, `animation-fill-mode: backwards`.
+`opacity 0 → 1`, `translateY(44px) → 0`, **750 ms**,
+`cubic-bezier(.33, 1, .68, 1)`, `animation-fill-mode: backwards` — kräftiger als im Vorbild (dort 20 px / 400 ms), damit die Bewegung klar zu sehen ist.
 
 Jeder Block trägt die Klasse `fade-up` und einen Index, der den Versatz von
-**50 ms** pro Stufe steuert:
+**90 ms** pro Stufe steuert (`--enter-stagger`):
 
 ```html
 <h1  class="hero__title fade-up" style="--enter-index: 0">

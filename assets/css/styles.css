@@ -67,10 +67,12 @@
   --font: "Outfit", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
           "Helvetica Neue", Arial, sans-serif;
 
-  /* Einblenden beim Seitenaufruf (wie im Vorbild: 400ms, 50ms Versatz) */
-  --enter-duration: 400ms;
+  /* Einblenden beim Seitenaufruf. Deutlich kräftiger als im Vorbild
+     (dort 400ms/20px) – die Bewegung soll klar wahrnehmbar sein. */
+  --enter-duration: 750ms;
   --enter-ease:     cubic-bezier(.33, 1, .68, 1);
-  --enter-shift:    20px;
+  --enter-shift:    44px;
+  --enter-stagger:  90ms;
 }
 
 /* =========================================================================
@@ -375,7 +377,7 @@ ul { list-style: none; margin: 0; padding: 0; }
 
 .fade-up {
   animation: fade-up var(--enter-duration) var(--enter-ease) backwards;
-  animation-delay: calc(var(--enter-index, 0) * 50ms);
+  animation-delay: calc(var(--enter-index, 0) * var(--enter-stagger));
 }
 
 /* =========================================================================
@@ -424,20 +426,18 @@ ul { list-style: none; margin: 0; padding: 0; }
   padding-inline: 20px;
 }
 
-/* Textspalte + Formular nebeneinander, Bild darunter */
+/* Titel über die volle Breite, darunter Text und Formular nebeneinander */
 .hero__top {
   display: grid;
-  gap: clamp(32px, 5vw, 64px);
+  gap: clamp(24px, 4vw, 36px);
 }
-
-.hero__copy { max-width: 640px; }
 
 .hero__title {
   margin: 0;
-  /* Untergrenze klein genug, damit "Automatisierungen," auch auf 320px-
-     Displays vollständig in eine Zeile passt. */
-  font-size: clamp(1.875rem, 8vw, 3.5rem);
-  line-height: 1.06;
+  /* Die vw-Stufe ist so gewählt, dass die längere Zeile auf jeder Breite
+     einzeilig bleibt – von 320px bis zum Maximum von 84px. */
+  font-size: clamp(1.9375rem, 9.8vw, 5.25rem);
+  line-height: 1.04;
   letter-spacing: -.03em;
   font-weight: 700;
   text-wrap: balance;
@@ -532,9 +532,12 @@ ul { list-style: none; margin: 0; padding: 0; }
 
   .hero__top {
     grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr);
-    align-items: center;
+    column-gap: clamp(40px, 5vw, 64px);
+    align-items: start;
   }
-  .hero__copy { max-width: none; }
+  .hero__title { grid-column: 1 / -1; }   /* Titel über beide Spalten */
+  .hero__lead  { grid-column: 1; }
+  .signup      { grid-column: 2; }
 }
 
 /* =========================================================================
