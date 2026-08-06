@@ -59,6 +59,12 @@ Stellschrauben in `:root`:
 Ohne Maus (Touch) erscheint der Kreis beim Tippen; bei
 `prefers-reduced-motion: reduce` folgt er ohne Nachziehen.
 
+Die Gitterfläche deckt den kompletten Hero ab und endet exakt an der Unterkante
+des Bildes: `.hero` hat unten kein Padding, `.hero__media` keinen unteren
+Aussenabstand. Der Kreis funktioniert damit bis zum letzten Pixel — sichtbar
+wird er überall dort, wo das Bild ihn nicht verdeckt, also links und rechts
+neben dem Bild und oberhalb davon.
+
 ## Einblenden beim Seitenaufruf
 
 Die Hero-Blöcke fahren beim Laden von unten ein — übernommen aus der Vorlage:
@@ -84,8 +90,9 @@ Bei `prefers-reduced-motion: reduce` sind alle Blöcke sofort sichtbar.
 * **Schrift** — `--font` in `:root`; für eine andere Schrift die `@font-face`-
   Blöcke am Anfang von `styles.css` ersetzen und den `preload` im `<head>`
   mitziehen.
-* **Foto** — `assets/img/hero.svg` durch ein eigenes Bild ersetzen und `src`,
-  `width`, `height` im `<figure class="hero__media">` anpassen.
+* **Bild** — `assets/img/hero.svg` durch ein eigenes ersetzen und `src`, `width`,
+  `height` im `<figure class="hero__media">` anpassen. Das Bild sitzt mittig
+  unter dem Text, maximal 1120 px breit; ein Querformat um 16:9 passt am besten.
 * **Menüs** — die `<li class="nav__item">`-Blöcke in `index.html`.
 * **Suche** — das `INDEX`-Array in `assets/js/app.js`; Tastenkürzel `/`,
   Navigation mit ↑/↓, `Enter` öffnet, `Esc` schließt.
