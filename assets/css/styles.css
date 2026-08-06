@@ -1,4 +1,28 @@
 /* =========================================================================
+   Schrift: Outfit (variabel, 100–900) – lokal gehostet, kein Google-CDN
+   ========================================================================= */
+@font-face {
+  font-family: "Outfit";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("../fonts/outfit-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+                 U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122,
+                 U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Outfit";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("../fonts/outfit-latin-ext.woff2") format("woff2");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF,
+                 U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF,
+                 U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+/* =========================================================================
    Aurora – Design-Tokens
    ========================================================================= */
 :root {
@@ -36,8 +60,13 @@
   --shadow-lg:  0 24px 48px -12px rgb(9 30 66 / .22), 0 0 1px rgb(9 30 66 / .2);
 
   --ease:       cubic-bezier(.4, 0, 0, 1);
-  --font: "Atlassian Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Inter,
-          Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font: "Outfit", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          "Helvetica Neue", Arial, sans-serif;
+
+  /* Einblenden beim Seitenaufruf (wie im Vorbild: 400ms, 50ms Versatz) */
+  --enter-duration: 400ms;
+  --enter-ease:     cubic-bezier(.33, 1, .68, 1);
+  --enter-shift:    20px;
 }
 
 /* =========================================================================
@@ -324,6 +353,21 @@ ul { list-style: none; margin: 0; padding: 0; }
 .mobile-nav a:hover { background: var(--surface-sunken); }
 
 /* =========================================================================
+   Einblenden beim Seitenaufruf
+   Entspricht dem Vorbild: opacity 0 → 1, 20px von unten,
+   400ms cubic-bezier(.33,1,.68,1), fill-mode backwards, 50ms Versatz.
+   ========================================================================= */
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(var(--enter-shift)); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.fade-up {
+  animation: fade-up var(--enter-duration) var(--enter-ease) backwards;
+  animation-delay: calc(var(--enter-index, 0) * 50ms);
+}
+
+/* =========================================================================
    Hero – Foto auf Gitter-Hintergrund mit Kreis-Ausschnitt
    ========================================================================= */
 .hero {
@@ -364,8 +408,8 @@ ul { list-style: none; margin: 0; padding: 0; }
 .hero__inner {
   position: relative; z-index: 1;
   display: grid;
-  gap: clamp(40px, 6vw, 72px);
-  max-width: 1200px;
+  gap: clamp(40px, 5vw, 64px);
+  max-width: 1280px;
   margin-inline: auto;
   padding-inline: 20px;
 }
@@ -374,31 +418,21 @@ ul { list-style: none; margin: 0; padding: 0; }
 
 .hero__title {
   margin: 0;
-  font-size: clamp(2.25rem, 5.2vw, 3.75rem);
-  line-height: 1.08;
-  letter-spacing: -.025em;
-  font-weight: 600;
+  font-size: clamp(2.5rem, 4.8vw, 3.5rem);
+  line-height: 1.06;
+  letter-spacing: -.03em;
+  font-weight: 700;
   text-wrap: balance;
 }
-.hero__highlight {
-  position: relative;
-  display: inline-block;
-  color: var(--brand);
-}
-/* weicher Pinselstrich unter dem Highlight */
-.hero__highlight::after {
-  content: "";
-  position: absolute; left: -2px; right: -2px; bottom: -.06em;
-  height: .12em;
-  background: currentColor;
-  border-radius: var(--radius-pill);
-  opacity: .28;
-}
+/* zwei feste Zeilen wie im Vorbild – ab Tablet aufwärts */
+.hero__title span { display: inline; }
 
 .hero__lead {
-  margin: 20px 0 0;
-  max-width: 46ch;
-  font-size: clamp(1.0625rem, 1.6vw, 1.25rem);
+  margin: 22px 0 0;
+  max-width: 44ch;
+  font-size: clamp(1.0625rem, 1.6vw, 1.3125rem);
+  line-height: 1.45;
+  font-weight: 400;
   color: var(--text-muted);
   text-wrap: pretty;
 }
@@ -457,6 +491,7 @@ ul { list-style: none; margin: 0; padding: 0; }
   .site-header__inner { padding-inline: 32px; }
   .menu__inner, .hero__inner { padding-inline: 32px; }
   .site-header__login { display: inline-flex; }
+  .hero__title span { display: block; }   /* feste zwei Zeilen wie im Vorbild */
 }
 
 @media (min-width: 1024px) {
@@ -465,7 +500,7 @@ ul { list-style: none; margin: 0; padding: 0; }
   .mobile-nav { display: none !important; }
 
   .hero__inner {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr);
     align-items: center;
   }
   .hero__copy { max-width: none; }

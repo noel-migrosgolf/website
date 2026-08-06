@@ -8,8 +8,23 @@ keine Abhängigkeiten.
 index.html
 assets/css/styles.css
 assets/js/app.js
-assets/img/hero.svg     ← Platzhalter-Foto, ersetzen
+assets/img/hero.svg         ← Platzhalter-Foto, ersetzen
+assets/fonts/outfit-*.woff2 ← Outfit, lokal gehostet
 ```
+
+## Schrift
+
+**Outfit** (variabel, 100–900), lokal unter `assets/fonts/` statt über das
+Google-CDN — dadurch keine Verbindung zu Google beim Seitenaufruf und ein
+Request weniger. Zwei Dateien, aufgeteilt nach `unicode-range`:
+
+| Datei | Zeichensatz | Grösse |
+| --- | --- | --- |
+| `outfit-latin.woff2` | Latin (Standard) | 32 KB |
+| `outfit-latin-ext.woff2` | Latin Extended | 15 KB |
+
+Die Latin-Datei wird im `<head>` per `rel="preload"` vorgeladen, damit die
+Überschrift ohne Nachladeeffekt erscheint.
 
 ## Lokal ansehen
 
@@ -44,10 +59,31 @@ Stellschrauben in `:root`:
 Ohne Maus (Touch) erscheint der Kreis beim Tippen; bei
 `prefers-reduced-motion: reduce` folgt er ohne Nachziehen.
 
+## Einblenden beim Seitenaufruf
+
+Die Hero-Blöcke fahren beim Laden von unten ein — übernommen aus der Vorlage:
+`opacity 0 → 1`, `translateY(20px) → 0`, **400 ms**,
+`cubic-bezier(.33, 1, .68, 1)`, `animation-fill-mode: backwards`.
+
+Jeder Block trägt die Klasse `fade-up` und einen Index, der den Versatz von
+**50 ms** pro Stufe steuert:
+
+```html
+<h1  class="hero__title fade-up" style="--enter-index: 0">
+<p   class="hero__lead  fade-up" style="--enter-index: 1">
+<form class="signup     fade-up" style="--enter-index: 2">
+<figure class="hero__media fade-up" style="--enter-index: 3">
+```
+
+Bei `prefers-reduced-motion: reduce` sind alle Blöcke sofort sichtbar.
+
 ## Anpassen
 
 * **Marke** — `Aurora` und das Logo-SVG in `index.html` (`.brand`) austauschen,
   Markenfarbe über `--brand` in `styles.css`.
+* **Schrift** — `--font` in `:root`; für eine andere Schrift die `@font-face`-
+  Blöcke am Anfang von `styles.css` ersetzen und den `preload` im `<head>`
+  mitziehen.
 * **Foto** — `assets/img/hero.svg` durch ein eigenes Bild ersetzen und `src`,
   `width`, `height` im `<figure class="hero__media">` anpassen.
 * **Menüs** — die `<li class="nav__item">`-Blöcke in `index.html`.
