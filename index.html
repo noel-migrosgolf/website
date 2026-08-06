@@ -1,0 +1,217 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Aurora – Wissen, Ideen und Zusammenarbeit an einem Ort</title>
+<meta name="description" content="Aurora bündelt Ideen, Dokumente und Wissen deines Teams an einem zentralen Ort.">
+<link rel="preconnect" href="">
+<link rel="stylesheet" href="assets/css/styles.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%231868DB'/%3E%3Cpath d='M9 22 16 9l7 13h-4.2l-2.8-5.4L13.2 22H9Z' fill='white'/%3E%3C/svg%3E">
+</head>
+<body>
+
+<a class="skip-link" href="#hero">Zu Inhalt springen</a>
+
+<!-- ============================ HEADER ============================ -->
+<header class="site-header" data-header>
+  <div class="site-header__inner">
+
+    <!-- Logo oben links -->
+    <a class="brand" href="/" aria-label="Aurora – zur Startseite">
+      <svg class="brand__mark" width="28" height="28" viewBox="0 0 32 32" aria-hidden="true" focusable="false">
+        <rect width="32" height="32" rx="8" fill="currentColor"></rect>
+        <path d="M9 22 16 9l7 13h-4.2l-2.8-5.4L13.2 22H9Z" fill="#fff"></path>
+      </svg>
+      <span class="brand__word">Aurora</span>
+    </a>
+
+    <!-- Hauptmenü -->
+    <nav class="nav" aria-label="Hauptnavigation">
+      <ul class="nav__list">
+
+        <li class="nav__item has-menu">
+          <button class="nav__link" type="button" aria-expanded="false" aria-controls="menu-funktionen" data-menu-trigger>
+            Funktionen
+            <svg class="nav__chevron" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 4.5 6 8l3.5-3.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+          </button>
+          <div class="menu" id="menu-funktionen" data-menu hidden>
+            <div class="menu__inner menu__inner--cols">
+              <div class="menu__col">
+                <p class="menu__label">Plattform</p>
+                <a class="menu__link" href="#"><span class="menu__title">Alle Features</span><span class="menu__desc">Der komplette Überblick</span></a>
+                <a class="menu__link" href="#"><span class="menu__title">Seiten &amp; Dokumente</span><span class="menu__desc">Schreiben, strukturieren, teilen</span></a>
+                <a class="menu__link" href="#"><span class="menu__title">Whiteboards</span><span class="menu__desc">Vom Einfall zum Plan</span></a>
+              </div>
+              <div class="menu__col">
+                <p class="menu__label">Intelligenz</p>
+                <a class="menu__link" href="#"><span class="menu__title">KI-Assistent</span><span class="menu__desc">Zusammenfassen und entwerfen</span></a>
+                <a class="menu__link" href="#"><span class="menu__title">Suche</span><span class="menu__desc">Antworten statt Trefferlisten</span></a>
+                <a class="menu__link" href="#"><span class="menu__title">Automatisierung</span><span class="menu__desc">Wiederkehrendes abgeben</span></a>
+              </div>
+            </div>
+          </div>
+        </li>
+
+        <li class="nav__item has-menu">
+          <button class="nav__link" type="button" aria-expanded="false" aria-controls="menu-ressourcen" data-menu-trigger>
+            Ressourcen
+            <svg class="nav__chevron" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 4.5 6 8l3.5-3.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+          </button>
+          <div class="menu" id="menu-ressourcen" data-menu hidden>
+            <div class="menu__inner">
+              <div class="menu__col">
+                <p class="menu__label">Lernen</p>
+                <a class="menu__link" href="#"><span class="menu__title">Guides</span><span class="menu__desc">Schritt für Schritt starten</span></a>
+                <a class="menu__link" href="#"><span class="menu__title">Blog</span><span class="menu__desc">Neues aus dem Produkt</span></a>
+                <a class="menu__link" href="#"><span class="menu__title">Community</span><span class="menu__desc">Fragen und Antworten</span></a>
+                <a class="menu__link" href="#"><span class="menu__title">Support</span><span class="menu__desc">Hilfe vom Team</span></a>
+              </div>
+            </div>
+          </div>
+        </li>
+
+        <li class="nav__item has-menu">
+          <button class="nav__link" type="button" aria-expanded="false" aria-controls="menu-vorlagen" data-menu-trigger>
+            Vorlagen
+            <svg class="nav__chevron" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 4.5 6 8l3.5-3.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+          </button>
+          <div class="menu" id="menu-vorlagen" data-menu hidden>
+            <div class="menu__inner menu__inner--cols">
+              <div class="menu__col">
+                <p class="menu__label">Nach Team</p>
+                <a class="menu__link" href="#"><span class="menu__title">Design</span></a>
+                <a class="menu__link" href="#"><span class="menu__title">Finanzen und Operations</span></a>
+                <a class="menu__link" href="#"><span class="menu__title">Human Resources</span></a>
+                <a class="menu__link" href="#"><span class="menu__title">Marketing und Vertrieb</span></a>
+              </div>
+              <div class="menu__col">
+                <p class="menu__label">Weitere</p>
+                <a class="menu__link" href="#"><span class="menu__title">Produktmanagement</span></a>
+                <a class="menu__link" href="#"><span class="menu__title">Projektmanagement</span></a>
+                <a class="menu__link" href="#"><span class="menu__title">Software und IT</span></a>
+                <a class="menu__link" href="#"><span class="menu__title">Alle Vorlagen</span></a>
+              </div>
+            </div>
+          </div>
+        </li>
+
+        <li class="nav__item"><a class="nav__link" href="#">Enterprise</a></li>
+        <li class="nav__item"><a class="nav__link" href="#">Preise</a></li>
+      </ul>
+    </nav>
+
+    <!-- Rechte Seite: Suche + Aktionen -->
+    <div class="site-header__actions">
+
+      <search class="search">
+        <button class="search__toggle" type="button" aria-expanded="false" aria-controls="search-panel" data-search-toggle>
+          <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <circle cx="10.8" cy="10.8" r="7.3" fill="none" stroke="currentColor" stroke-width="2.1"></circle>
+            <path d="m16.4 16.4 4.1 4.1" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round"></path>
+          </svg>
+          <span class="visually-hidden">Suchen</span>
+        </button>
+      </search>
+
+      <a class="btn btn--ghost site-header__login" href="#">Einloggen</a>
+      <a class="btn btn--primary" href="#hero-form">Kostenlos starten</a>
+
+      <button class="burger" type="button" aria-expanded="false" aria-controls="mobile-nav" data-burger>
+        <span class="visually-hidden">Menü umschalten</span>
+        <span class="burger__bars" aria-hidden="true"></span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Suchpanel -->
+  <div class="search-panel" id="search-panel" data-search-panel hidden>
+    <div class="search-panel__inner">
+      <form class="search-panel__form" role="search" autocomplete="off" data-search-form>
+        <svg class="search-panel__icon" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="10.8" cy="10.8" r="7.3" fill="none" stroke="currentColor" stroke-width="2.1"></circle>
+          <path d="m16.4 16.4 4.1 4.1" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round"></path>
+        </svg>
+        <input class="search-panel__input" type="search" name="q" placeholder="Wonach suchst du?"
+               aria-label="Suchbegriff" role="combobox" aria-autocomplete="list"
+               aria-controls="search-results" aria-expanded="false" data-search-input>
+        <button class="search-panel__close" type="button" data-search-close>
+          <span class="visually-hidden">Suche schließen</span>
+          <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round"></path></svg>
+        </button>
+      </form>
+      <p class="search-panel__status" role="status" data-search-status></p>
+      <ul class="search-results" id="search-results" role="listbox" aria-label="Suchergebnisse" data-search-results></ul>
+    </div>
+  </div>
+</header>
+
+<!-- Mobile-Navigation -->
+<div class="mobile-nav" id="mobile-nav" data-mobile-nav hidden>
+  <nav aria-label="Mobile Navigation">
+    <ul>
+      <li><a href="#">Funktionen</a></li>
+      <li><a href="#">Ressourcen</a></li>
+      <li><a href="#">Vorlagen</a></li>
+      <li><a href="#">Enterprise</a></li>
+      <li><a href="#">Preise</a></li>
+      <li><a href="#">Einloggen</a></li>
+    </ul>
+  </nav>
+</div>
+
+<!-- ============================= HERO ============================= -->
+<main id="main">
+  <section class="hero" id="hero" data-grid-hero>
+
+    <!-- Gitter-Hintergrund + Kreis-Ausschnitt an der Mausposition -->
+    <div class="hero__grid" data-grid aria-hidden="true"></div>
+
+    <div class="hero__inner">
+      <div class="hero__copy">
+        <h1 class="hero__title">
+          Wissen, Ideen und Zusammenarbeit
+          <span class="hero__highlight">an einem Ort</span>
+        </h1>
+        <p class="hero__lead">
+          Dokumente, Notizen, Entscheidungen und Menschen — zentral gebündelt,
+          durchsuchbar und immer aktuell.
+        </p>
+
+        <form class="signup" id="hero-form" novalidate data-signup>
+          <div class="signup__row">
+            <label class="visually-hidden" for="signup-email">Geschäftliche E-Mail-Adresse</label>
+            <input class="signup__input" id="signup-email" name="email" type="email"
+                   placeholder="Geschäftliche E-Mail-Adresse" required
+                   aria-describedby="signup-hint" autocomplete="email">
+            <button class="btn btn--primary btn--lg" type="submit">Registrieren</button>
+          </div>
+          <p class="signup__hint" id="signup-hint">
+            Nutze deine geschäftliche Adresse, um dein Team direkt zu finden.
+          </p>
+          <p class="signup__message" role="status" data-signup-message></p>
+
+          <div class="signup__divider"><span>Oder fortfahren mit</span></div>
+          <button class="btn btn--social" type="button">
+            <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true">
+              <path d="M17.64 9.205c0-.639-.057-1.252-.164-1.841H9v3.481h4.844a4.14 4.14 0 0 1-1.796 2.716v2.259h2.908c1.702-1.567 2.684-3.875 2.684-6.615Z" fill="#4285F4"></path>
+              <path d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18Z" fill="#34A853"></path>
+              <path d="M3.964 10.71A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.042l3.007-2.332Z" fill="#FBBC05"></path>
+              <path d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58Z" fill="#EA4335"></path>
+            </svg>
+            <span>Google</span>
+          </button>
+        </form>
+      </div>
+
+      <!-- Foto (Platzhalter: assets/img/hero.svg durch eigenes Bild ersetzen) -->
+      <figure class="hero__media">
+        <img src="assets/img/hero.svg" alt="Vorschau des Arbeitsbereichs" width="960" height="640" loading="eager" decoding="async">
+      </figure>
+    </div>
+  </section>
+</main>
+
+<script src="assets/js/app.js" defer></script>
+</body>
+</html>

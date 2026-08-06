@@ -1,0 +1,81 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 640" width="960" height="640" role="img" aria-label="Platzhalter: Vorschau des Arbeitsbereichs">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#E9F2FE"/>
+      <stop offset="1" stop-color="#F4EDFF"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#1868DB"/>
+      <stop offset="1" stop-color="#4D8CED"/>
+    </linearGradient>
+    <clipPath id="round"><rect width="960" height="640" rx="20"/></clipPath>
+  </defs>
+
+  <g clip-path="url(#round)">
+    <rect width="960" height="640" fill="url(#sky)"/>
+    <circle cx="820" cy="90" r="190" fill="#BF63F3" opacity=".12"/>
+    <circle cx="140" cy="580" r="160" fill="#1868DB" opacity=".10"/>
+
+    <!-- App-Fenster -->
+    <g transform="translate(64 72)">
+      <rect x="0" y="0" width="832" height="496" rx="16" fill="#FFFFFF"/>
+      <rect x="0" y="0" width="832" height="52" rx="16" fill="#FFFFFF"/>
+      <path d="M0 52h832" stroke="#DDDEE1" stroke-width="2"/>
+      <circle cx="28" cy="26" r="6" fill="#FF9F1A"/>
+      <circle cx="50" cy="26" r="6" fill="#DDDEE1"/>
+      <circle cx="72" cy="26" r="6" fill="#DDDEE1"/>
+      <rect x="300" y="16" width="232" height="20" rx="10" fill="#F1F2F4"/>
+
+      <!-- Seitenleiste -->
+      <rect x="0" y="52" width="196" height="444" fill="#F7F8F9"/>
+      <path d="M196 52v444" stroke="#DDDEE1" stroke-width="2"/>
+      <rect x="24" y="84"  width="148" height="28" rx="8" fill="url(#accent)" opacity=".14"/>
+      <rect x="36" y="94"  width="86"  height="8"  rx="4" fill="#1868DB"/>
+      <g fill="#C1C7D0">
+        <rect x="36" y="136" width="112" height="8" rx="4"/>
+        <rect x="36" y="168" width="92"  height="8" rx="4"/>
+        <rect x="36" y="200" width="122" height="8" rx="4"/>
+        <rect x="36" y="232" width="76"  height="8" rx="4"/>
+      </g>
+      <rect x="24" y="272" width="148" height="2" rx="1" fill="#DDDEE1"/>
+      <g fill="#DCDFE4">
+        <rect x="36" y="298" width="104" height="8" rx="4"/>
+        <rect x="36" y="330" width="120" height="8" rx="4"/>
+        <rect x="36" y="362" width="88"  height="8" rx="4"/>
+      </g>
+
+      <!-- Inhalt -->
+      <rect x="232" y="88"  width="300" height="18" rx="9" fill="#101214" opacity=".82"/>
+      <rect x="232" y="122" width="416" height="10" rx="5" fill="#C1C7D0"/>
+      <rect x="232" y="146" width="372" height="10" rx="5" fill="#DCDFE4"/>
+
+      <rect x="232" y="192" width="264" height="128" rx="12" fill="#F1F2F4"/>
+      <rect x="252" y="212" width="88"  height="10" rx="5" fill="#8590A2"/>
+      <path d="M252 296h224" stroke="#DDDEE1" stroke-width="2"/>
+      <path d="M256 284l40-30 34 22 44-46 40 30 44-38"
+            fill="none" stroke="url(#accent)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+
+      <rect x="520" y="192" width="128" height="128" rx="12" fill="#FFFFFF" stroke="#DDDEE1" stroke-width="2"/>
+      <circle cx="584" cy="248" r="34" fill="none" stroke="#DCDFE4" stroke-width="12"/>
+      <path d="M584 214a34 34 0 0 1 30 50" fill="none" stroke="url(#accent)" stroke-width="12" stroke-linecap="round"/>
+
+      <rect x="232" y="352" width="416" height="10" rx="5" fill="#DCDFE4"/>
+      <rect x="232" y="376" width="356" height="10" rx="5" fill="#DCDFE4"/>
+
+      <!-- Kommentar-Karte -->
+      <g transform="translate(232 412)">
+        <rect x="0" y="0" width="416" height="56" rx="10" fill="#FFFFFF" stroke="#DDDEE1" stroke-width="2"/>
+        <circle cx="30" cy="28" r="14" fill="url(#accent)"/>
+        <rect x="56" y="18" width="96"  height="8" rx="4" fill="#8590A2"/>
+        <rect x="56" y="34" width="180" height="8" rx="4" fill="#DCDFE4"/>
+      </g>
+
+      <!-- Anwesende -->
+      <g transform="translate(700 16)">
+        <circle cx="16" cy="10" r="12" fill="#1868DB"/>
+        <circle cx="42" cy="10" r="12" fill="#BF63F3"/>
+        <circle cx="68" cy="10" r="12" fill="#FF9F1A"/>
+      </g>
+    </g>
+  </g>
+</svg>
