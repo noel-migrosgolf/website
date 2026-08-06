@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32" role="img" aria-label="1Automationen">
+  <rect width="32" height="32" rx="7" fill="#1E3A6E"/>
+  <g transform="translate(2 6.8) scale(0.302)">
+    <path d="M9 24 L24 8 H33.5 L23.5 52 H15 Z" fill="#35A2F7"/>
+    <path d="M30 52 L52 8 H64 L86 52 H72 L68.5 42 H49.5 L46 52 Z
+             M51 36 H67 L59 16 Z"
+          fill="#fff" fill-rule="evenodd" stroke="#1E3A6E" stroke-width="2.6" stroke-linejoin="round"/>
+    <path d="M8 51.5 C26 43, 50 28, 76 21" fill="none" stroke="#1E3A6E" stroke-width="6.6" stroke-linecap="round"/>
+    <path d="M8 51.5 C26 43, 50 28, 76 21" fill="none" stroke="#35A2F7" stroke-width="2.8" stroke-linecap="round"/>
+    <circle cx="80.6" cy="19.6" r="4.2" fill="none" stroke="#35A2F7" stroke-width="2.8"/>
+  </g>
+</svg>

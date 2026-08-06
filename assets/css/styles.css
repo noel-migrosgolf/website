@@ -23,9 +23,13 @@
 }
 
 /* =========================================================================
-   Aurora – Design-Tokens
+   1Automationen – Design-Tokens
    ========================================================================= */
 :root {
+  /* Logofarben */
+  --logo-navy:        #1E3A6E;
+  --logo-blue:        #1585E8;
+
   --brand:            #1868DB;
   --brand-hover:      #1558BC;
   --brand-active:     #123F97;
@@ -168,15 +172,22 @@ ul { list-style: none; margin: 0; padding: 0; }
 
 /* Logo */
 .brand {
-  display: inline-flex; align-items: center; gap: 10px;
+  display: inline-flex; align-items: center; gap: 9px;
   flex: 0 0 auto;
   margin-inline-end: 12px;
-  color: var(--brand);
 }
+.brand__mark { flex: 0 0 auto; }
+
+/* Auf schmalen Displays trägt die Bildmarke allein – sonst wird der
+   Kopfbereich zusammen mit Suche und Button zu breit. */
 .brand__word {
-  font-size: 1.25rem; font-weight: 700; letter-spacing: -.02em;
-  color: var(--text);
+  display: none;
+  font-size: 1.1875rem; font-weight: 700; letter-spacing: -.02em;
+  white-space: nowrap;
+  color: var(--logo-navy);
 }
+/* Wortspiel: das "1A" in der Logofarbe absetzen */
+.brand__accent { color: var(--logo-blue); }
 
 /* Menüs */
 .nav { display: none; flex: 1 1 auto; min-width: 0; }
@@ -423,7 +434,9 @@ ul { list-style: none; margin: 0; padding: 0; }
 
 .hero__title {
   margin: 0;
-  font-size: clamp(2.5rem, 4.8vw, 3.5rem);
+  /* Untergrenze klein genug, damit "Automatisierungen," auch auf 320px-
+     Displays vollständig in eine Zeile passt. */
+  font-size: clamp(1.875rem, 8vw, 3.5rem);
   line-height: 1.06;
   letter-spacing: -.03em;
   font-weight: 700;
@@ -496,6 +509,15 @@ ul { list-style: none; margin: 0; padding: 0; }
 /* =========================================================================
    Breakpoints
    ========================================================================= */
+@media (max-width: 400px) {
+  .site-header__inner { padding-inline: 14px; }
+  .site-header__actions .btn { padding-inline: 10px; }
+}
+
+@media (min-width: 520px) {
+  .brand__word { display: inline; }
+}
+
 @media (min-width: 768px) {
   .site-header__inner { padding-inline: 32px; }
   .menu__inner, .hero__inner { padding-inline: 32px; }

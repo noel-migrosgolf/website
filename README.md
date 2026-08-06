@@ -1,8 +1,13 @@
-# Website
+# 1Automationen – Website
 
 Statische Landingpage — Header (Logo, Menüs, Suche) und **ein** Hero-Bereich mit
 Gitter-Hintergrund und Kreis-Ausschnitt an der Mausposition. Kein Build-Schritt,
 keine Abhängigkeiten.
+
+> **Logo:** `assets/img/logo.svg` und `assets/img/favicon.svg` sind nach Vorlage
+> nachgezeichnet, nicht die Originaldateien. Sobald das Original vorliegt,
+> beide Dateien und das eingebettete SVG in `index.html` (`.brand__mark`)
+> ersetzen.
 
 ```
 index.html
@@ -85,8 +90,10 @@ Bei `prefers-reduced-motion: reduce` sind alle Blöcke sofort sichtbar.
 
 ## Anpassen
 
-* **Marke** — `Aurora` und das Logo-SVG in `index.html` (`.brand`) austauschen,
-  Markenfarbe über `--brand` in `styles.css`.
+* **Marke** — Schriftzug und Logo stehen in `index.html` unter `.brand`. Das
+  „1A" ist als `<span class="brand__accent">` abgesetzt und wird über
+  `--logo-blue` eingefärbt, der Rest über `--logo-navy`. Unter 520 px Breite
+  steht die Bildmarke allein, damit die Kopfzeile nicht überläuft.
 * **Schrift** — `--font` in `:root`; für eine andere Schrift die `@font-face`-
   Blöcke am Anfang von `styles.css` ersetzen und den `preload` im `<head>`
   mitziehen.

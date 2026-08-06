@@ -1,5 +1,5 @@
 /* =========================================================================
-   Aurora – Interaktion
+   1Automationen – Interaktion
    1) Hero: Gitter-Hintergrund mit Kreis-Ausschnitt an der Mausposition
    2) Header: Dropdown-Menüs
    3) Header: Suchfunktion
