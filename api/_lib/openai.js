@@ -70,7 +70,16 @@ async function sende(pfad, koerper, zeitlimit) {
   try {
     daten = JSON.parse(rohtext);
   } catch {
-    throw new OpenAiFehler("Antwort war kein JSON", antwort.status, "kein_json");
+    // Kein JSON heisst fast immer: die Antwort kam nicht von OpenAI,
+    // sondern von etwas dazwischen – Proxy, Firewall, Gateway. Der
+    // Anfang des Textes ist dann die eigentliche Auskunft und gehört
+    // ins Serverlog, sonst sucht man im Dunkeln.
+    throw new OpenAiFehler(
+      `HTTP ${antwort.status}, Antwort war kein JSON: ` +
+      rohtext.slice(0, 200).replace(/\s+/g, " ").trim(),
+      antwort.status,
+      "kein_json"
+    );
   }
 
   if (!antwort.ok) {

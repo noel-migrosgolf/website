@@ -55,7 +55,7 @@ async function ladeEnv() {
 /* --- API-Handler einmalig laden ---------------------------------------- */
 const HANDLER = {};
 async function ladeHandler() {
-  for (const name of ["verstehen", "analyse", "lead"]) {
+  for (const name of ["verstehen", "analyse", "lead", "status"]) {
     const modul = await import(`./api/${name}.js`);
     HANDLER[`/api/${name}`] = modul.default;
   }
@@ -125,9 +125,14 @@ createServer(async (req, res) => {
 
   await liefereDatei(decodeURIComponent(url.pathname), res);
 }).listen(PORT, () => {
-  console.log(`1Automationen läuft auf http://localhost:${PORT}`);
-  console.log(`Prozesscheck: http://localhost:${PORT}/prozesscheck.html`);
+  console.log(`1Automationen läuft auf Port ${PORT}`);
+  console.log(`Modell: ${process.env.OPENAI_MODEL || "gpt-5.6-terra"} · ` +
+              `Endpunkt: ${process.env.OPENAI_BASE_URL || "https://api.openai.com/v1"} · ` +
+              `Node ${process.version}`);
   if (!process.env.OPENAI_API_KEY) {
     console.log("Hinweis: OPENAI_API_KEY fehlt – der Wizard läuft, die Analyse zeigt den Rückfall.");
+  } else {
+    console.log(`OPENAI_API_KEY gesetzt (${process.env.OPENAI_API_KEY.length} Zeichen). ` +
+                `Konfiguration prüfen: GET /api/status`);
   }
 });

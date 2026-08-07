@@ -59,7 +59,11 @@ export default async function handler(req, res) {
     return antworte(res, 200, bereinigeVerstehen(roh));
   } catch (f) {
     const status = f instanceof OpenAiFehler && f.status === 429 ? 429 : 502;
-    protokolliere("verstehen", start, status, { code: f.code || "unbekannt" });
+    protokolliere("verstehen", start, status, {
+      modell: MODELL_KLEIN(),
+      code: f.code || "unbekannt",
+      grund: JSON.stringify(f.message || "")
+    });
     return fehler(res, status, "analyse_fehlgeschlagen");
   }
 }

@@ -60,6 +60,19 @@ Aufwand, Analyse. Am Ende sieht der Besucher seinen Ist-Ablauf, den möglichen
 Soll-Ablauf und die Kennzahlen — **vor** jeder Kontaktangabe. Erst darunter
 steht das Formular.
 
+Die Seite baut sich ohne Einblendung auf — das gehört zur Startseite, nicht
+zu einer Arbeitsseite. Übernommen ist dagegen der Gitter-Hintergrund mit dem
+Kreis-Ausschnitt an der Mausposition: `initGridReveal()` in `app.js` findet
+den Block über `data-grid-hero` und `data-grid`, die Seite setzt nur
+`--hero-bg` auf ihre eigene Grundfarbe.
+
+Um die Wizard-Karte wandert ein Lichtrand. Er entsteht aus einem
+Kegelverlauf, dessen Startwinkel über `@property --pc-winkel` animiert wird —
+ein typisierter Winkel, weil sich Custom Properties sonst nicht animieren
+lassen. Fehlt `@property`, steht der Verlauf still und bleibt ein ruhiger
+farbiger Rand. Gemessen kostet die Animation auf 390 px keinen Bildabstand;
+bei `prefers-reduced-motion` steht sie ohnehin.
+
 Die vollständige Spezifikation samt Bewertungsankern, Schema und Copy steht in
 [`docs/prompt-ki-prozesscheck.md`](docs/prompt-ki-prozesscheck.md).
 
@@ -79,6 +92,80 @@ setzen, nicht als Datei ausliefern.
 | `LEAD_EMPFAENGER` | Empfängeradresse der Anfragen |
 | `RESEND_API_KEY` | Optional. Ohne Schlüssel landen Anfragen nur in `data/leads.jsonl`. |
 | `RATE_LIMIT_*` | Aufrufe je IP und Stunde |
+
+### Deployment auf Render
+
+Der Dienst muss ein **Web Service** sein, keine Static Site. Eine Static Site
+liefert nur die Dateien aus — dann läuft `server.js` nie, alle `/api/`-Aufrufe
+fehlen, und die Umgebungsvariable spielt keine Rolle, weil es keinen Prozess
+gibt, der sie lesen könnte.
+
+| Feld | Wert |
+| --- | --- |
+| Language / Runtime | Node |
+| Build Command | `npm install` |
+| Start Command | `node server.js` |
+| Health Check Path | `/api/status` |
+| Environment Variables | mindestens `OPENAI_API_KEY`, dazu `LEAD_EMPFAENGER` |
+
+Das Projekt hat keine Abhängigkeiten. `npm install` installiert also nichts,
+läuft aber sauber durch und erfüllt Renders Pflichtfeld für den Build.
+
+Den Port setzt Render selbst über `PORT`; `server.js` liest ihn aus. Nach dem
+Hinzufügen einer Umgebungsvariablen ist ein neues Deployment nötig — die Werte
+werden nur beim Start gelesen.
+
+Alternativ liegt die Konfiguration als Blueprint in
+[`render.yaml`](render.yaml): in Render unter **New → Blueprint** das
+Repository wählen. Die Geheimnisse stehen dort mit `sync: false`, Render fragt
+sie beim Anlegen ab und speichert sie verschlüsselt — im Repository landen sie
+nie.
+
+> **Free-Plan:** Der Dienst wird nach Leerlauf angehalten, der erste Aufruf
+> danach dauert einige Sekunden. Ausserdem ist das Dateisystem nicht dauerhaft
+> — ohne `RESEND_API_KEY` gehen die Anfragen aus `data/leads.jsonl` beim
+> nächsten Deployment verloren. Für den produktiven Betrieb den Mailversand
+> einrichten.
+
+### Fehlersuche nach dem Deployment
+
+Zeigt der Wizard „Die Analyse ist nicht durchgelaufen", ist als Erstes zu
+klären, ob der Node-Dienst überhaupt läuft:
+
+```bash
+curl -s https://DEINE-DOMAIN/api/status
+```
+
+| Antwort | Bedeutung | Lösung |
+| --- | --- | --- |
+| JSON mit `"ok": true` | Der Dienst läuft. Weiter mit der Logzeile unten. | – |
+| HTML oder 404 | Die Seite wird als reine Statik ausgeliefert, es läuft kein Node. | Als **Web Service** deployen, nicht als Static Site. Start-Befehl `node server.js`, kein Build-Schritt nötig. |
+| `"schluessel_gesetzt": false` | Die Umgebungsvariable kommt nicht an. | Namen prüfen (`OPENAI_API_KEY`), danach neu deployen — Variablen werden erst beim Start gelesen. |
+
+`/api/status` gibt den Schlüssel nie aus, nur Länge und Präfix. Daran erkennt
+man einen abgeschnittenen oder mit Leerzeichen eingefügten Wert:
+`schluessel_praefix` sollte `sk-proj` oder `sk-` sein, `schluessel_sauber`
+muss `true` sein.
+
+Läuft der Dienst und ist der Schlüssel gesetzt, steht der Grund in der
+Logzeile des fehlgeschlagenen Aufrufs:
+
+```
+[2026-08-07T13:30:54.081Z] analyse status=502 dauer=57ms
+  modell=gpt-5.6-terra code=model_not_found grund="The model … does not exist"
+```
+
+| `code` | Bedeutung |
+| --- | --- |
+| `model_not_found`, `invalid_request_error` | Die Modellbezeichnung stimmt nicht. `OPENAI_MODEL` korrigieren. |
+| `invalid_api_key` | Schlüssel falsch oder widerrufen. |
+| `insufficient_quota` | Kein Guthaben im OpenAI-Projekt. |
+| `unvollstaendig` | Antwort abgeschnitten, `max_output_tokens` in `api/analyse.js` erhöhen. |
+| `kein_json` | Die Antwort kam nicht von OpenAI, sondern von einem Proxy oder Gateway. Der Anfang der Antwort steht in `grund`. |
+
+Ein zweiter Versuch wird nur bei unbrauchbaren Antworten unternommen. Ein
+abgelehnter Aufruf — falsches Modell, ungültiger Schlüssel — wird nicht
+wiederholt, das kostete nur Zeit und Geld.
 
 ### Wie die Zahlen entstehen
 
