@@ -80,6 +80,40 @@ setzen, nicht als Datei ausliefern.
 | `RESEND_API_KEY` | Optional. Ohne Schlüssel landen Anfragen nur in `data/leads.jsonl`. |
 | `RATE_LIMIT_*` | Aufrufe je IP und Stunde |
 
+### Deployment auf Render
+
+Der Dienst muss ein **Web Service** sein, keine Static Site. Eine Static Site
+liefert nur die Dateien aus — dann läuft `server.js` nie, alle `/api/`-Aufrufe
+fehlen, und die Umgebungsvariable spielt keine Rolle, weil es keinen Prozess
+gibt, der sie lesen könnte.
+
+| Feld | Wert |
+| --- | --- |
+| Language / Runtime | Node |
+| Build Command | `npm install` |
+| Start Command | `node server.js` |
+| Health Check Path | `/api/status` |
+| Environment Variables | mindestens `OPENAI_API_KEY`, dazu `LEAD_EMPFAENGER` |
+
+Das Projekt hat keine Abhängigkeiten. `npm install` installiert also nichts,
+läuft aber sauber durch und erfüllt Renders Pflichtfeld für den Build.
+
+Den Port setzt Render selbst über `PORT`; `server.js` liest ihn aus. Nach dem
+Hinzufügen einer Umgebungsvariablen ist ein neues Deployment nötig — die Werte
+werden nur beim Start gelesen.
+
+Alternativ liegt die Konfiguration als Blueprint in
+[`render.yaml`](render.yaml): in Render unter **New → Blueprint** das
+Repository wählen. Die Geheimnisse stehen dort mit `sync: false`, Render fragt
+sie beim Anlegen ab und speichert sie verschlüsselt — im Repository landen sie
+nie.
+
+> **Free-Plan:** Der Dienst wird nach Leerlauf angehalten, der erste Aufruf
+> danach dauert einige Sekunden. Ausserdem ist das Dateisystem nicht dauerhaft
+> — ohne `RESEND_API_KEY` gehen die Anfragen aus `data/leads.jsonl` beim
+> nächsten Deployment verloren. Für den produktiven Betrieb den Mailversand
+> einrichten.
+
 ### Fehlersuche nach dem Deployment
 
 Zeigt der Wizard „Die Analyse ist nicht durchgelaufen", ist als Erstes zu

@@ -1,0 +1,61 @@
+# Render-Blueprint für die Website samt Prozesscheck.
+#
+# Wichtig: Das muss ein Web Service sein, keine Static Site. Eine Static
+# Site liefert nur die Dateien aus – dann läuft server.js nie und alle
+# /api/-Endpunkte fehlen, unabhängig davon, ob der Schlüssel gesetzt ist.
+#
+# Verwendung: In Render unter "New" → "Blueprint" das Repository wählen.
+# Wer den Dienst von Hand angelegt hat, trägt einfach die Werte unten ein;
+# diese Datei wird dann nicht gelesen.
+
+services:
+  - type: web
+    name: 1automationen
+    runtime: node
+    plan: free
+    region: frankfurt
+
+    # Das Projekt hat keine Abhängigkeiten. npm install läuft trotzdem
+    # sauber durch und erfüllt Renders Pflichtfeld für den Build.
+    buildCommand: npm install
+    startCommand: node server.js
+
+    # Render prüft darüber, ob der Dienst lebt. Der Endpunkt gibt nur
+    # Konfigurationsfakten aus, nie den Schlüssel.
+    healthCheckPath: /api/status
+
+    envVars:
+      # sync: false heisst: Render fragt den Wert beim Anlegen ab und
+      # speichert ihn verschlüsselt. Der Schlüssel steht damit NICHT
+      # im Repository.
+      - key: OPENAI_API_KEY
+        sync: false
+
+      # Vor dem Livegang gegen die aktuelle OpenAI-Dokumentation prüfen.
+      - key: OPENAI_MODEL
+        value: gpt-5.6-terra
+      - key: OPENAI_MODEL_FAST
+        value: gpt-5.6-terra
+
+      # Für europäische Datenhaltung auf https://eu.api.openai.com/v1
+      # umstellen – setzt die passende Einstellung im OpenAI-Projekt voraus.
+      - key: OPENAI_BASE_URL
+        value: https://api.openai.com/v1
+
+      # Empfänger der Anfragen aus dem Kontaktformular.
+      - key: LEAD_EMPFAENGER
+        sync: false
+
+      # Optional. Ohne diesen Schlüssel landen Anfragen nur in der Datei
+      # data/leads.jsonl – die ist auf dem Free-Plan nicht dauerhaft.
+      - key: RESEND_API_KEY
+        sync: false
+
+      - key: NODE_VERSION
+        value: "22"
+      - key: RATE_LIMIT_ANALYSE_PRO_STUNDE
+        value: "6"
+      - key: RATE_LIMIT_VERSTEHEN_PRO_STUNDE
+        value: "40"
+      - key: RATE_LIMIT_LEAD_PRO_STUNDE
+        value: "5"
