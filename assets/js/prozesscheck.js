@@ -1044,7 +1044,21 @@
       signal: AbortSignal.timeout(45000)
     })
       .then(function (antwort) {
-        return antwort.json().then(function (daten) {
+        return antwort.text().then(function (roh) {
+          var daten = null;
+          try {
+            daten = JSON.parse(roh);
+          } catch (f) {
+            // Keine JSON-Antwort: dann läuft der Node-Dienst nicht und die
+            // Seite wird als reine Statik ausgeliefert. Für den Besucher
+            // sieht das aus wie ein Ausfall, für den Betreiber ist es ein
+            // Deployment-Fehler – deshalb der Hinweis in der Konsole.
+            console.error(
+              "/api/analyse hat kein JSON geliefert (HTTP " + antwort.status + "). " +
+              "Läuft der Node-Dienst? Prüfen mit: GET /api/status"
+            );
+            throw { status: antwort.status, kein_json: true };
+          }
           return { status: antwort.status, daten: daten };
         });
       })
@@ -1059,13 +1073,13 @@
         var text;
         if (status === 429) {
           text = "Gerade sind viele Checks unterwegs. Versuch es in einer Minute nochmal.";
-        } else if (status === 503) {
+        } else if (status === 503 || (fehler && fehler.kein_json)) {
           text = "Die Analyse ist im Moment nicht verfügbar. Schick uns deine Angaben " +
                  "direkt — wir schauen sie uns von Hand an.";
         } else {
           text = "Die Analyse ist nicht durchgelaufen.";
         }
-        zeigeAnalyseFehler(text, status === 503);
+        zeigeAnalyseFehler(text, status === 503 || Boolean(fehler && fehler.kein_json));
       })
       .finally(function () {
         analyseLaeuft = false;

@@ -96,20 +96,43 @@ export default async function handler(req, res) {
     return bereinigeAnalyse(roh);
   }
 
+  // Ein zweiter Versuch hilft nur, wenn die Antwort unbrauchbar war.
+  // Bei einem abgelehnten Aufruf – falsches Modell, ungültiger Schlüssel,
+  // fehlende Berechtigung – kostet die Wiederholung nur Zeit und Geld.
+  function lohntWiederholung(f) {
+    if (!(f instanceof OpenAiFehler)) return false;
+    return ["kein_json", "leer", "unvollstaendig"].includes(f.code) || f.status >= 500;
+  }
+
+  function melde(f, status) {
+    // Die Meldung von OpenAI gehört ins Serverlog, nicht zum Besucher.
+    // Sie enthält den eigentlichen Grund, etwa einen unbekannten Modellnamen.
+    protokolliere("analyse", start, status, {
+      modell: MODELL(),
+      code: f.code || "unbekannt",
+      grund: JSON.stringify(f.message || "")
+    });
+  }
+
   let analyse;
   try {
     analyse = await versuch("low");
   } catch (f) {
     if (f instanceof OpenAiFehler && f.status === 429) {
       res.setHeader("Retry-After", "60");
-      protokolliere("analyse", start, 429, { code: f.code });
+      melde(f, 429);
       return fehler(res, 429, "zu_viele");
     }
-    // Einmal mit höherem Denkaufwand wiederholen.
+
+    if (!lohntWiederholung(f)) {
+      melde(f, 502);
+      return fehler(res, 502, "analyse_fehlgeschlagen");
+    }
+
     try {
       analyse = await versuch("medium");
     } catch (f2) {
-      protokolliere("analyse", start, 502, { code: f2.code || "unbekannt" });
+      melde(f2, 502);
       return fehler(res, 502, "analyse_fehlgeschlagen");
     }
   }

@@ -80,6 +80,46 @@ setzen, nicht als Datei ausliefern.
 | `RESEND_API_KEY` | Optional. Ohne Schlüssel landen Anfragen nur in `data/leads.jsonl`. |
 | `RATE_LIMIT_*` | Aufrufe je IP und Stunde |
 
+### Fehlersuche nach dem Deployment
+
+Zeigt der Wizard „Die Analyse ist nicht durchgelaufen", ist als Erstes zu
+klären, ob der Node-Dienst überhaupt läuft:
+
+```bash
+curl -s https://DEINE-DOMAIN/api/status
+```
+
+| Antwort | Bedeutung | Lösung |
+| --- | --- | --- |
+| JSON mit `"ok": true` | Der Dienst läuft. Weiter mit der Logzeile unten. | – |
+| HTML oder 404 | Die Seite wird als reine Statik ausgeliefert, es läuft kein Node. | Als **Web Service** deployen, nicht als Static Site. Start-Befehl `node server.js`, kein Build-Schritt nötig. |
+| `"schluessel_gesetzt": false` | Die Umgebungsvariable kommt nicht an. | Namen prüfen (`OPENAI_API_KEY`), danach neu deployen — Variablen werden erst beim Start gelesen. |
+
+`/api/status` gibt den Schlüssel nie aus, nur Länge und Präfix. Daran erkennt
+man einen abgeschnittenen oder mit Leerzeichen eingefügten Wert:
+`schluessel_praefix` sollte `sk-proj` oder `sk-` sein, `schluessel_sauber`
+muss `true` sein.
+
+Läuft der Dienst und ist der Schlüssel gesetzt, steht der Grund in der
+Logzeile des fehlgeschlagenen Aufrufs:
+
+```
+[2026-08-07T13:30:54.081Z] analyse status=502 dauer=57ms
+  modell=gpt-5.6-terra code=model_not_found grund="The model … does not exist"
+```
+
+| `code` | Bedeutung |
+| --- | --- |
+| `model_not_found`, `invalid_request_error` | Die Modellbezeichnung stimmt nicht. `OPENAI_MODEL` korrigieren. |
+| `invalid_api_key` | Schlüssel falsch oder widerrufen. |
+| `insufficient_quota` | Kein Guthaben im OpenAI-Projekt. |
+| `unvollstaendig` | Antwort abgeschnitten, `max_output_tokens` in `api/analyse.js` erhöhen. |
+| `kein_json` | Die Antwort kam nicht von OpenAI, sondern von einem Proxy oder Gateway. Der Anfang der Antwort steht in `grund`. |
+
+Ein zweiter Versuch wird nur bei unbrauchbaren Antworten unternommen. Ein
+abgelehnter Aufruf — falsches Modell, ungültiger Schlüssel — wird nicht
+wiederholt, das kostete nur Zeit und Geld.
+
 ### Wie die Zahlen entstehen
 
 Das Modell liefert **Urteile**, der Code liefert **Zahlen**. Diese Trennung
