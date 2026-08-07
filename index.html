@@ -218,18 +218,10 @@
         </form>
       </div>
 
-      <!-- Video mittig unten; der Gitter-Effekt reicht bis an dessen Unterkante.
-           Stummgeschaltet und ohne Bedienelemente – nur so lassen Browser
-           die automatische Wiedergabe zu. initHeroVideo() in app.js hält es
-           an, sobald es aus dem Blickfeld scrollt, und bei reduzierter
-           Bewegung bleibt es beim ersten Bild stehen. -->
+      <!-- Bild mittig unten; der Gitter-Effekt reicht bis an dessen Unterkante.
+           Platzhalter: assets/img/hero.svg durch eigenes Bild ersetzen. -->
       <figure class="hero__media fade-up" style="--enter-index: 3">
-        <video class="hero__video" data-hero-video
-               width="1280" height="720"
-               autoplay muted loop playsinline preload="auto"
-               aria-label="Kamerafahrt durch einen automatisierten Ablauf">
-          <source src="assets/video/hero.mp4" type="video/mp4">
-        </video>
+        <img src="assets/img/hero.svg" alt="Vorschau des Dashboards" width="1280" height="720" loading="eager" decoding="async">
       </figure>
     </div>
   </section>

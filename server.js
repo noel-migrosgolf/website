@@ -14,7 +14,6 @@
 
 import { createServer } from "node:http";
 import { readFile, stat } from "node:fs/promises";
-import { createReadStream } from "node:fs";
 import { extname, join, normalize, sep } from "node:path";
 
 const WURZEL = process.cwd();
@@ -28,10 +27,7 @@ const TYPEN = {
   ".woff2": "font/woff2",
   ".png":  "image/png",
   ".jpg":  "image/jpeg",
-  ".jpeg": "image/jpeg",
   ".webp": "image/webp",
-  ".mp4":  "video/mp4",
-  ".webm": "video/webm",
   ".json": "application/json; charset=utf-8",
   ".ico":  "image/x-icon"
 };
@@ -65,13 +61,8 @@ async function ladeHandler() {
   }
 }
 
-/* --- statische Dateien --------------------------------------------------
-   Streamt statt einzulesen, beantwortet Range-Anfragen und schickt
-   Validatoren mit. Alle drei Punkte zahlen auf das Hero-Video ein: ohne
-   Range kann der Browser nicht spulen, ohne ETag lädt er die Datei bei
-   jedem Seitenaufruf komplett neu.
-   ------------------------------------------------------------------------ */
-async function liefereDatei(pfad, req, res) {
+/* --- statische Dateien -------------------------------------------------- */
+async function liefereDatei(pfad, res) {
   // Pfad-Ausbruch verhindern
   const sicher = normalize(join(WURZEL, pfad));
   if (!sicher.startsWith(WURZEL + sep) && sicher !== WURZEL) {
@@ -80,19 +71,15 @@ async function liefereDatei(pfad, req, res) {
   }
 
   let ziel = sicher;
-  let info;
   try {
-    info = await stat(ziel);
-    if (info.isDirectory()) {
-      ziel = join(ziel, "index.html");
-      info = await stat(ziel);
-    }
+    const info = await stat(ziel);
+    if (info.isDirectory()) ziel = join(ziel, "index.html");
   } catch {
     // Ohne Endung eine .html-Datei versuchen: /prozesscheck → prozesscheck.html
     if (!extname(ziel)) {
       try {
+        await stat(ziel + ".html");
         ziel += ".html";
-        info = await stat(ziel);
       } catch {
         res.writeHead(404, { "Content-Type": "text/html; charset=utf-8" })
            .end("<h1>404</h1><p>Seite nicht gefunden.</p>");
@@ -104,61 +91,15 @@ async function liefereDatei(pfad, req, res) {
     }
   }
 
-  const typ = TYPEN[extname(ziel)] || "application/octet-stream";
-  const etag = `"${info.size.toString(16)}-${info.mtimeMs.toString(16)}"`;
-  const istSeite = typ.startsWith("text/html");
-
-  const kopf = {
-    "Content-Type": typ,
-    "ETag": etag,
-    "Last-Modified": info.mtime.toUTCString(),
-    "Accept-Ranges": "bytes",
-    // Seiten immer prüfen, Anhänge eine Stunde behalten. Ohne Hash im
-    // Dateinamen wäre alles darüber riskant.
-    "Cache-Control": istSeite ? "no-cache" : "public, max-age=3600"
-  };
-
-  // Unverändert? Dann spart der Browser sich den Inhalt.
-  if (req.headers["if-none-match"] === etag) {
-    res.writeHead(304, kopf).end();
-    return;
+  try {
+    const inhalt = await readFile(ziel);
+    res.writeHead(200, {
+      "Content-Type": TYPEN[extname(ziel)] || "application/octet-stream",
+      "Cache-Control": "no-cache"
+    }).end(inhalt);
+  } catch {
+    res.writeHead(404).end("Nicht gefunden");
   }
-
-  // Teilbereich angefordert (Video spulen, Wiedergabe auf iOS)
-  const bereich = req.headers.range;
-  if (bereich) {
-    const treffer = /^bytes=(\d*)-(\d*)$/.exec(bereich.trim());
-    if (treffer) {
-      let von = treffer[1] === "" ? null : Number(treffer[1]);
-      let bis = treffer[2] === "" ? null : Number(treffer[2]);
-
-      if (von === null && bis !== null) {           // bytes=-500 → letzte 500
-        von = Math.max(0, info.size - bis);
-        bis = info.size - 1;
-      } else {
-        if (von === null) von = 0;
-        if (bis === null || bis >= info.size) bis = info.size - 1;
-      }
-
-      if (von > bis || von >= info.size) {
-        res.writeHead(416, { "Content-Range": `bytes */${info.size}` }).end();
-        return;
-      }
-
-      res.writeHead(206, {
-        ...kopf,
-        "Content-Range": `bytes ${von}-${bis}/${info.size}`,
-        "Content-Length": bis - von + 1
-      });
-      if (req.method === "HEAD") { res.end(); return; }
-      createReadStream(ziel, { start: von, end: bis }).pipe(res);
-      return;
-    }
-  }
-
-  res.writeHead(200, { ...kopf, "Content-Length": info.size });
-  if (req.method === "HEAD") { res.end(); return; }
-  createReadStream(ziel).pipe(res);
 }
 
 /* --- Server ------------------------------------------------------------- */
@@ -182,7 +123,7 @@ createServer(async (req, res) => {
     return;
   }
 
-  await liefereDatei(decodeURIComponent(url.pathname), req, res);
+  await liefereDatei(decodeURIComponent(url.pathname), res);
 }).listen(PORT, () => {
   console.log(`1Automationen läuft auf Port ${PORT}`);
   console.log(`Modell: ${process.env.OPENAI_MODEL || "gpt-5.6-terra"} · ` +
