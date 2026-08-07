@@ -1,0 +1,641 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kostenloser Prozesscheck – 1Automationen</title>
+<meta name="description" content="Beschreibe deinen Ablauf in zwei Minuten. Unsere KI zeigt dir, welche Schritte sich digitalisieren, automatisieren oder mit KI lösen lassen.">
+<link rel="preload" href="assets/fonts/outfit-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="assets/css/styles.css">
+<link rel="stylesheet" href="assets/css/prozesscheck.css">
+<link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+
+<a class="skip-link" href="#wizard">Zum Prozesscheck springen</a>
+
+<!-- ====================== PIKTOGRAMME ======================
+     Strichbasiert, 24×24, ohne Füllung, erben die Textfarbe.
+     Keine externe Icon-Bibliothek – siehe README.
+     ========================================================= -->
+<svg style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true" focusable="false">
+  <defs>
+    <g id="pi-clock"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></g>
+    <g id="pi-repeat"><path d="M17 3l3 3-3 3"/><path d="M20 6H9a5 5 0 0 0-5 5v1"/><path d="M7 21l-3-3 3-3"/><path d="M4 18h11a5 5 0 0 0 5-5v-1"/></g>
+    <g id="pi-document"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="M9 13h6"/><path d="M9 17h4"/></g>
+    <g id="pi-link"><path d="M9.5 14.5l5-5"/><path d="M11 6.5l1.2-1.2a4.2 4.2 0 0 1 6 6L17 12.5"/><path d="M13 17.5l-1.2 1.2a4.2 4.2 0 0 1-6-6L7 11.5"/></g>
+    <g id="pi-mail"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3.5 7.5l8.5 6 8.5-6"/></g>
+    <g id="pi-spark"><path d="M11 3l1.7 4.6L17.3 9.3l-4.6 1.7L11 15.6 9.3 11 4.7 9.3 9.3 7.6z"/><path d="M17.5 14.5l.8 2.2 2.2.8-2.2.8-.8 2.2-.8-2.2-2.2-.8 2.2-.8z"/></g>
+    <g id="pi-help"><circle cx="12" cy="12" r="9"/><path d="M9.6 9.4a2.5 2.5 0 1 1 3.3 2.4c-.6.2-.9.8-.9 1.4v.5"/><path d="M12 17h.01"/></g>
+    <g id="pi-check"><path d="M5 12.8l4.6 4.6L19 7.6"/></g>
+    <g id="pi-arrow-right"><path d="M4 12h15"/><path d="M13 6l6 6-6 6"/></g>
+    <g id="pi-arrow-left"><path d="M20 12H5"/><path d="M11 18l-6-6 6-6"/></g>
+    <g id="pi-arrow-up"><path d="M12 19V6"/><path d="M6 12l6-6 6 6"/></g>
+    <g id="pi-arrow-down"><path d="M12 5v13"/><path d="M18 12l-6 6-6-6"/></g>
+    <g id="pi-chevron-down"><path d="M6 9.5l6 6 6-6"/></g>
+    <g id="pi-mic"><path d="M12 3a3 3 0 0 1 3 3v6a3 3 0 0 1-6 0V6a3 3 0 0 1 3-3z"/><path d="M5 11a7 7 0 0 0 14 0"/><path d="M12 18v3"/><path d="M8.5 21h7"/></g>
+    <g id="pi-edit"><path d="M4 20.5l4.2-1L20 7.7 16.3 4 4.5 15.8z"/><path d="M14.8 5.5l3.7 3.7"/></g>
+    <g id="pi-plus"><path d="M12 5v14"/><path d="M5 12h14"/></g>
+    <g id="pi-minus"><path d="M5 12h14"/></g>
+    <g id="pi-close"><path d="M6 6l12 12"/><path d="M18 6L6 18"/></g>
+    <g id="pi-trigger"><path d="M13.5 3L5.5 14H11l-.8 7 8.3-11H13z"/></g>
+    <g id="pi-hand"><path d="M8.5 12.5V6a1.6 1.6 0 0 1 3.2 0v5"/><path d="M11.7 11V5.2a1.6 1.6 0 0 1 3.2 0V11"/><path d="M14.9 11.4V8.3a1.6 1.6 0 0 1 3.2 0V15a6 6 0 0 1-6 6h-.6a5.6 5.6 0 0 1-4.8-2.8l-2.2-3.8a1.6 1.6 0 0 1 2.7-1.6l1.3 1.9"/></g>
+    <g id="pi-system"><rect x="3" y="4.5" width="18" height="15" rx="2"/><path d="M3 9h18"/><path d="M6.2 6.8h.01"/><path d="M9 6.8h.01"/></g>
+    <g id="pi-branch"><path d="M12 3l9 9-9 9-9-9z"/></g>
+    <g id="pi-output"><path d="M14 3.5H5.5a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2H14"/><path d="M10 12h10.5"/><path d="M17 8.2l3.8 3.8-3.8 3.8"/></g>
+    <g id="pi-warning"><path d="M12 4L2.6 20.2h18.8z"/><path d="M12 10v4.2"/><path d="M12 17.4h.01"/></g>
+    <g id="pi-info"><circle cx="12" cy="12" r="9"/><path d="M12 11v5.5"/><path d="M12 7.8h.01"/></g>
+    <g id="pi-lock"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></g>
+    <g id="pi-print"><path d="M7 8.5V3h10v5.5"/><path d="M7 17.5H5a2 2 0 0 1-2-2v-4a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2h-2"/><path d="M7 14h10v7H7z"/></g>
+  </defs>
+</svg>
+
+<!-- ============================ HEADER ============================
+     SYNCHRON HALTEN MIT index.html
+     ================================================================ -->
+<header class="site-header" data-header>
+  <div class="site-header__inner">
+
+    <a class="brand" href="/" aria-label="1Automationen – zur Startseite">
+      <svg class="brand__mark" width="44" height="28" viewBox="2 2 88 56" aria-hidden="true" focusable="false">
+        <defs>
+          <linearGradient id="brand-one" x1="0" y1="0" x2=".35" y2="1">
+            <stop offset="0" stop-color="#35A2F7"></stop>
+            <stop offset="1" stop-color="#1585E8"></stop>
+          </linearGradient>
+        </defs>
+        <path d="M9 24 L24 8 H33.5 L23.5 52 H15 Z" fill="url(#brand-one)"></path>
+        <path d="M30 52 L52 8 H64 L86 52 H72 L68.5 42 H49.5 L46 52 Z M51 36 H67 L59 16 Z"
+              fill="#1E3A6E" fill-rule="evenodd" stroke="#fff" stroke-width="2.6" stroke-linejoin="round"></path>
+        <path d="M8 51.5 C26 43, 50 28, 76 21" fill="none" stroke="#fff" stroke-width="6.6" stroke-linecap="round"></path>
+        <path d="M8 51.5 C26 43, 50 28, 76 21" fill="none" stroke="#1E3A6E" stroke-width="2.8" stroke-linecap="round"></path>
+        <circle cx="80.6" cy="19.6" r="4.2" fill="none" stroke="#1E3A6E" stroke-width="2.8"></circle>
+      </svg>
+      <span class="brand__word"><span class="brand__accent">1A</span>utomationen</span>
+    </a>
+
+    <nav class="nav" aria-label="Hauptnavigation">
+      <ul class="nav__list">
+        <li class="nav__item"><a class="nav__link" href="/#hero">Startseite</a></li>
+        <li class="nav__item"><a class="nav__link" href="#">Enterprise</a></li>
+        <li class="nav__item"><a class="nav__link" href="#">Preise</a></li>
+      </ul>
+    </nav>
+
+    <div class="site-header__actions">
+      <search class="search">
+        <button class="search__toggle" type="button" aria-expanded="false" aria-controls="search-panel" data-search-toggle>
+          <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <circle cx="10.8" cy="10.8" r="7.3" fill="none" stroke="currentColor" stroke-width="2.1"></circle>
+            <path d="m16.4 16.4 4.1 4.1" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round"></path>
+          </svg>
+          <span class="visually-hidden">Suchen</span>
+        </button>
+      </search>
+
+      <a class="btn btn--ghost site-header__login" href="#">Einloggen</a>
+      <a class="btn btn--primary" href="#wizard">
+        <span class="btn__label-full">Kostenloser Prozesscheck starten</span>
+        <span class="btn__label-short" aria-hidden="true">Prozesscheck</span>
+      </a>
+
+      <button class="burger" type="button" aria-expanded="false" aria-controls="mobile-nav" data-burger>
+        <span class="visually-hidden">Menü umschalten</span>
+        <span class="burger__bars" aria-hidden="true"></span>
+      </button>
+    </div>
+  </div>
+
+  <div class="search-panel" id="search-panel" data-search-panel hidden>
+    <div class="search-panel__inner">
+      <form class="search-panel__form" role="search" autocomplete="off" data-search-form>
+        <svg class="search-panel__icon" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="10.8" cy="10.8" r="7.3" fill="none" stroke="currentColor" stroke-width="2.1"></circle>
+          <path d="m16.4 16.4 4.1 4.1" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round"></path>
+        </svg>
+        <input class="search-panel__input" type="search" name="q" placeholder="Wonach suchst du?"
+               aria-label="Suchbegriff" role="combobox" aria-autocomplete="list"
+               aria-controls="search-results" aria-expanded="false" data-search-input>
+        <button class="search-panel__close" type="button" data-search-close>
+          <span class="visually-hidden">Suche schliessen</span>
+          <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round"></path></svg>
+        </button>
+      </form>
+      <p class="search-panel__status" role="status" data-search-status></p>
+      <ul class="search-results" id="search-results" role="listbox" aria-label="Suchergebnisse" data-search-results></ul>
+    </div>
+  </div>
+</header>
+
+<div class="mobile-nav" id="mobile-nav" data-mobile-nav hidden>
+  <nav aria-label="Mobile Navigation">
+    <ul>
+      <li><a href="#wizard">Kostenloser Prozesscheck</a></li>
+      <li><a href="/#hero">Startseite</a></li>
+      <li><a href="#">Enterprise</a></li>
+      <li><a href="#">Preise</a></li>
+      <li><a href="#">Einloggen</a></li>
+    </ul>
+  </nav>
+</div>
+
+<!-- ============================= INHALT ============================= -->
+<main id="main" class="pc">
+
+  <div class="pc__intro">
+    <h1 class="pc__title fade-up" style="--enter-index: 0">
+      Wie viel Potenzial steckt in deinem Prozess?
+    </h1>
+    <!-- Alternative: Was würdest du gerne nie wieder von Hand machen? -->
+    <p class="pc__lead fade-up" style="--enter-index: 1">
+      Beschreibe deinen Ablauf in wenigen Schritten. Unsere KI analysiert,
+      wo sich Digitalisierung und Automatisierung wirklich lohnen.
+    </p>
+    <ul class="pc__meta fade-up" style="--enter-index: 2">
+      <li>Rund 2 Minuten</li>
+      <li>Keine Registrierung</li>
+      <li>Ergebnis sofort sichtbar</li>
+    </ul>
+  </div>
+
+  <!-- Fortschritt -->
+  <nav class="pc-progress fade-up" style="--enter-index: 3" aria-label="Fortschritt" data-progress>
+    <ol class="pc-progress__list">
+      <li class="pc-progress__item is-current" data-progress-item="1" aria-current="step">
+        <button type="button" class="pc-progress__btn" disabled>
+          <span class="pc-progress__num" aria-hidden="true">1</span>
+          <span class="pc-progress__label">Ziel</span>
+        </button>
+      </li>
+      <li class="pc-progress__item" data-progress-item="2">
+        <button type="button" class="pc-progress__btn" disabled>
+          <span class="pc-progress__num" aria-hidden="true">2</span>
+          <span class="pc-progress__label">Prozess</span>
+        </button>
+      </li>
+      <li class="pc-progress__item" data-progress-item="3">
+        <button type="button" class="pc-progress__btn" disabled>
+          <span class="pc-progress__num" aria-hidden="true">3</span>
+          <span class="pc-progress__label">Systeme</span>
+        </button>
+      </li>
+      <li class="pc-progress__item" data-progress-item="4">
+        <button type="button" class="pc-progress__btn" disabled>
+          <span class="pc-progress__num" aria-hidden="true">4</span>
+          <span class="pc-progress__label">Aufwand</span>
+        </button>
+      </li>
+      <li class="pc-progress__item" data-progress-item="5">
+        <button type="button" class="pc-progress__btn" disabled>
+          <span class="pc-progress__num" aria-hidden="true">5</span>
+          <span class="pc-progress__label">Analyse</span>
+        </button>
+      </li>
+    </ol>
+    <p class="pc-progress__mobile">
+      <span data-progress-text>Schritt 1 von 5</span>
+      <span class="pc-progress__bar" aria-hidden="true"><span data-progress-bar></span></span>
+    </p>
+  </nav>
+
+  <!-- Wiederaufnahme -->
+  <div class="pc-resume" data-resume hidden>
+    <p class="pc-resume__text">Du hast einen Check begonnen. Möchtest du weitermachen?</p>
+    <div class="pc-resume__actions">
+      <button class="btn btn--primary" type="button" data-resume-yes>Fortsetzen</button>
+      <button class="btn btn--secondary" type="button" data-resume-no>Neu beginnen</button>
+    </div>
+  </div>
+
+  <!-- ============================ WIZARD ============================ -->
+  <div class="pc-card fade-up" id="wizard" style="--enter-index: 4">
+    <form class="pc-form" novalidate data-wizard>
+
+      <!-- ---------------------- SCHRITT 1: ZIEL ---------------------- -->
+      <section class="wz-step" data-step="1">
+        <p class="wz-step__eyebrow">Schritt 1 von 5</p>
+        <h2 class="wz-step__title" tabindex="-1">Was möchtest du verbessern?</h2>
+        <p class="wz-step__lead">Mehrfachauswahl. Wähle alles, was zutrifft.</p>
+
+        <div class="wz-step__body">
+          <fieldset class="wz-tiles">
+            <legend class="visually-hidden">Ziele</legend>
+
+            <label class="wz-tile">
+              <input type="checkbox" name="ziel" value="zeit">
+              <span class="wz-tile__box">
+                <svg class="wz-tile__icon" width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><use href="#pi-clock"/></svg>
+                <span class="wz-tile__text">
+                  <span class="wz-tile__title">Zeit sparen</span>
+                  <span class="wz-tile__desc">Weniger Aufwand für dieselbe Arbeit</span>
+                </span>
+              </span>
+            </label>
+
+            <label class="wz-tile">
+              <input type="checkbox" name="ziel" value="wiederkehrend">
+              <span class="wz-tile__box">
+                <svg class="wz-tile__icon" width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><use href="#pi-repeat"/></svg>
+                <span class="wz-tile__text">
+                  <span class="wz-tile__title">Wiederkehrende Arbeit abgeben</span>
+                  <span class="wz-tile__desc">Dasselbe passiert immer wieder</span>
+                </span>
+              </span>
+            </label>
+
+            <label class="wz-tile">
+              <input type="checkbox" name="ziel" value="papier">
+              <span class="wz-tile__box">
+                <svg class="wz-tile__icon" width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><use href="#pi-document"/></svg>
+                <span class="wz-tile__text">
+                  <span class="wz-tile__title">Papier, Excel und Listen ablösen</span>
+                  <span class="wz-tile__desc">Vieles läuft noch von Hand</span>
+                </span>
+              </span>
+            </label>
+
+            <label class="wz-tile">
+              <input type="checkbox" name="ziel" value="verbinden">
+              <span class="wz-tile__box">
+                <svg class="wz-tile__icon" width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><use href="#pi-link"/></svg>
+                <span class="wz-tile__text">
+                  <span class="wz-tile__title">Programme verbinden</span>
+                  <span class="wz-tile__desc">Daten wandern manuell von A nach B</span>
+                </span>
+              </span>
+            </label>
+
+            <label class="wz-tile">
+              <input type="checkbox" name="ziel" value="anfragen">
+              <span class="wz-tile__box">
+                <svg class="wz-tile__icon" width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><use href="#pi-mail"/></svg>
+                <span class="wz-tile__text">
+                  <span class="wz-tile__title">E-Mails und Anfragen bearbeiten</span>
+                  <span class="wz-tile__desc">Posteingang statt Prozess</span>
+                </span>
+              </span>
+            </label>
+
+            <label class="wz-tile">
+              <input type="checkbox" name="ziel" value="ki">
+              <span class="wz-tile__box">
+                <svg class="wz-tile__icon" width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><use href="#pi-spark"/></svg>
+                <span class="wz-tile__text">
+                  <span class="wz-tile__title">KI einsetzen</span>
+                  <span class="wz-tile__desc">Inhalte verstehen, prüfen, erzeugen</span>
+                </span>
+              </span>
+            </label>
+
+            <label class="wz-tile wz-tile--wide">
+              <input type="checkbox" name="ziel" value="unklar">
+              <span class="wz-tile__box">
+                <svg class="wz-tile__icon" width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><use href="#pi-help"/></svg>
+                <span class="wz-tile__text">
+                  <span class="wz-tile__title">Ich weiss noch nicht genau</span>
+                  <span class="wz-tile__desc">Wir finden es gemeinsam heraus</span>
+                </span>
+              </span>
+            </label>
+          </fieldset>
+        </div>
+
+        <p class="wz-step__error" role="alert" hidden></p>
+      </section>
+
+      <!-- -------------------- SCHRITT 2: PROZESS -------------------- -->
+      <section class="wz-step" data-step="2" hidden>
+        <p class="wz-step__eyebrow">Schritt 2 von 5</p>
+        <h2 class="wz-step__title" tabindex="-1">Wie läuft der Prozess heute ab?</h2>
+        <p class="wz-step__lead">
+          Beschreibe kurz, was passiert — vom Auslöser bis zum Ergebnis.
+          Je genauer, desto besser die Analyse.
+        </p>
+
+        <div class="wz-step__body">
+          <label class="visually-hidden" for="wz-beschreibung">Beschreibung deines Ablaufs</label>
+          <textarea class="wz-textarea" id="wz-beschreibung" name="beschreibung" rows="7"
+                    maxlength="4000" data-beschreibung
+                    aria-describedby="wz-qualitaet"
+                    placeholder="Eine Anfrage kommt per E-Mail. Ich übertrage die Daten in Excel, erstelle daraus ein PDF und sende es anschliessend an den Kunden."></textarea>
+
+          <div class="wz-textarea__fuss">
+            <p class="wz-quality" id="wz-qualitaet" data-qualitaet>
+              <span class="wz-quality__bar" aria-hidden="true"><span></span><span></span><span></span></span>
+              <span class="wz-quality__text"></span>
+            </p>
+            <p class="wz-counter" data-counter hidden></p>
+          </div>
+
+          <div class="wz-helpers">
+            <button class="wz-helper" type="button" data-beispiel>
+              <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><use href="#pi-document"/></svg>
+              Beispiel einsetzen
+            </button>
+            <button class="wz-helper" type="button" data-diktieren hidden>
+              <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><use href="#pi-mic"/></svg>
+              <span data-diktieren-text>Diktieren</span>
+            </button>
+          </div>
+
+          <details class="wz-details">
+            <summary>Was gehört hier rein?</summary>
+            <ul class="wz-details__list">
+              <li>Was löst den Ablauf aus?</li>
+              <li>Welche Schritte folgen, der Reihe nach?</li>
+              <li>Welche Programme sind beteiligt?</li>
+              <li>Was ist am Ende das Ergebnis?</li>
+            </ul>
+          </details>
+
+          <!-- KI-Rückmeldung -->
+          <div class="wz-understood" data-understood hidden>
+            <div class="wz-understood__head">
+              <svg class="wz-understood__icon" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><use href="#pi-spark"/></svg>
+              <div>
+                <p class="wz-understood__title">So haben wir dich verstanden</p>
+                <p class="wz-understood__hint">Stimmt etwas nicht? Klicke hinein und ändere es.</p>
+              </div>
+              <span class="wz-understood__spinner" data-understood-spinner hidden aria-hidden="true"></span>
+            </div>
+
+            <div class="wz-understood__body" aria-live="polite" data-understood-body>
+              <p class="wz-understood__rand" data-verstanden-ausloeser-zeile hidden>
+                <span class="wz-understood__randlabel">Auslöser</span>
+                <span data-verstanden-ausloeser></span>
+              </p>
+
+              <ol class="wz-steps" data-steps></ol>
+
+              <button class="wz-helper wz-helper--add" type="button" data-step-add>
+                <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><use href="#pi-plus"/></svg>
+                Schritt hinzufügen
+              </button>
+
+              <p class="wz-understood__rand" data-verstanden-ergebnis-zeile hidden>
+                <span class="wz-understood__randlabel">Ergebnis</span>
+                <span data-verstanden-ergebnis></span>
+              </p>
+            </div>
+
+            <div class="wz-questions" data-questions hidden>
+              <p class="wz-questions__title">Damit die Analyse genauer wird</p>
+              <div data-questions-list></div>
+            </div>
+          </div>
+        </div>
+
+        <p class="wz-step__error" role="alert" hidden></p>
+      </section>
+
+      <!-- -------------------- SCHRITT 3: SYSTEME -------------------- -->
+      <section class="wz-step" data-step="3" hidden>
+        <p class="wz-step__eyebrow">Schritt 3 von 5</p>
+        <h2 class="wz-step__title" tabindex="-1">Welche Programme sind beteiligt?</h2>
+        <p class="wz-step__lead">
+          Mehrfachauswahl. Was du in Schritt 2 erwähnt hast, ist bereits vorausgewählt.
+        </p>
+
+        <div class="wz-step__body">
+          <div data-systeme></div>
+
+          <div class="wz-add">
+            <label class="wz-add__label" for="wz-system-frei">Fehlt etwas? Programm eintragen</label>
+            <div class="wz-add__row">
+              <input class="wz-input" id="wz-system-frei" type="text" maxlength="40"
+                     placeholder="Name des Programms" data-system-frei autocomplete="off">
+              <button class="btn btn--secondary" type="button" data-system-add>Hinzufügen</button>
+            </div>
+            <ul class="wz-chips wz-chips--eigen" data-systeme-frei></ul>
+          </div>
+
+          <fieldset class="wz-sub">
+            <legend class="wz-sub__legend">Sind die Programme heute schon miteinander verbunden?</legend>
+            <div class="wz-chips">
+              <label class="wz-chip"><input type="radio" name="vernetzung" value="nein"><span>Nein, alles von Hand</span></label>
+              <label class="wz-chip"><input type="radio" name="vernetzung" value="teilweise"><span>Teilweise</span></label>
+              <label class="wz-chip"><input type="radio" name="vernetzung" value="ja"><span>Ja, weitgehend</span></label>
+              <label class="wz-chip"><input type="radio" name="vernetzung" value="unbekannt"><span>Weiss ich nicht</span></label>
+            </div>
+          </fieldset>
+        </div>
+
+        <p class="wz-step__error" role="alert" hidden></p>
+      </section>
+
+      <!-- -------------------- SCHRITT 4: AUFWAND -------------------- -->
+      <section class="wz-step" data-step="4" hidden>
+        <p class="wz-step__eyebrow">Schritt 4 von 5</p>
+        <h2 class="wz-step__title" tabindex="-1">Wie oft und wie lange?</h2>
+        <p class="wz-step__lead">
+          Grobe Angaben genügen. Daraus berechnen wir, was der Prozess heute kostet.
+        </p>
+
+        <div class="wz-step__body">
+          <fieldset class="wz-sub">
+            <legend class="wz-sub__legend">Wie oft läuft dieser Prozess?</legend>
+            <div class="wz-chips">
+              <label class="wz-chip"><input type="radio" name="haeufigkeit" value="mehrmals_taeglich"><span>Mehrmals täglich</span></label>
+              <label class="wz-chip"><input type="radio" name="haeufigkeit" value="taeglich"><span>Täglich</span></label>
+              <label class="wz-chip"><input type="radio" name="haeufigkeit" value="mehrmals_woechentlich"><span>Mehrmals pro Woche</span></label>
+              <label class="wz-chip"><input type="radio" name="haeufigkeit" value="woechentlich"><span>Wöchentlich</span></label>
+              <label class="wz-chip"><input type="radio" name="haeufigkeit" value="monatlich"><span>Monatlich</span></label>
+              <label class="wz-chip"><input type="radio" name="haeufigkeit" value="seltener"><span>Seltener</span></label>
+            </div>
+            <p class="wz-sub__hint">Gesamtzahl über alle beteiligten Personen hinweg.</p>
+          </fieldset>
+
+          <fieldset class="wz-sub">
+            <legend class="wz-sub__legend">Wie lange dauert ein Durchlauf?</legend>
+            <div class="wz-chips">
+              <label class="wz-chip"><input type="radio" name="dauer" value="5"><span>5 Min.</span></label>
+              <label class="wz-chip"><input type="radio" name="dauer" value="15"><span>15 Min.</span></label>
+              <label class="wz-chip"><input type="radio" name="dauer" value="30"><span>30 Min.</span></label>
+              <label class="wz-chip"><input type="radio" name="dauer" value="60"><span>1 Std.</span></label>
+              <label class="wz-chip"><input type="radio" name="dauer" value="120"><span>2 Std. und mehr</span></label>
+            </div>
+          </fieldset>
+
+          <fieldset class="wz-sub">
+            <legend class="wz-sub__legend">Wie viele Personen sind daran beteiligt? <span class="wz-sub__optional">optional</span></legend>
+            <div class="wz-chips">
+              <label class="wz-chip"><input type="radio" name="personen" value="1"><span>1</span></label>
+              <label class="wz-chip"><input type="radio" name="personen" value="2-5"><span>2 bis 5</span></label>
+              <label class="wz-chip"><input type="radio" name="personen" value="6-20"><span>6 bis 20</span></label>
+              <label class="wz-chip"><input type="radio" name="personen" value="20+"><span>Mehr als 20</span></label>
+            </div>
+          </fieldset>
+
+          <div class="wz-vorschau" data-vorschau hidden>
+            <p class="wz-vorschau__zahl" data-vorschau-text></p>
+            <p class="wz-vorschau__hinweis">Grobe Hochrechnung aus deinen Angaben.</p>
+          </div>
+        </div>
+
+        <p class="wz-step__error" role="alert" hidden></p>
+      </section>
+
+      <!-- -------------------- SCHRITT 5: ANALYSE -------------------- -->
+      <section class="wz-step wz-step--breit" data-step="5" hidden>
+        <p class="wz-step__eyebrow">Schritt 5 von 5</p>
+        <h2 class="wz-step__title" tabindex="-1">Dein Prozesscheck</h2>
+
+        <!-- Ladezustand -->
+        <div class="wz-laden" data-laden hidden aria-busy="true">
+          <p class="wz-laden__status" aria-live="polite" data-laden-status>Deine Beschreibung wird gelesen …</p>
+          <div class="wz-skeleton wz-skeleton--score"></div>
+          <div class="wz-skeleton wz-skeleton--kpi"></div>
+          <div class="wz-skeleton wz-skeleton--flow"></div>
+          <p class="wz-laden__lang" data-laden-lang hidden>Das dauert heute etwas länger als sonst.</p>
+        </div>
+
+        <!-- Fehler -->
+        <div class="wz-fehler" data-analyse-fehler hidden>
+          <svg class="wz-fehler__icon" width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><use href="#pi-warning"/></svg>
+          <p class="wz-fehler__text" data-analyse-fehler-text></p>
+          <div class="wz-fehler__actions">
+            <button class="btn btn--primary" type="button" data-analyse-retry>Nochmal versuchen</button>
+            <button class="btn btn--secondary" type="button" data-analyse-manuell>Angaben direkt schicken</button>
+          </div>
+        </div>
+
+        <!-- Ergebnis -->
+        <div class="wz-ergebnis" data-ergebnis hidden></div>
+
+        <!-- Kontakt -->
+        <div class="wz-lead" data-lead hidden>
+          <h3 class="wz-lead__title">Unverbindlich besprechen</h3>
+          <p class="wz-lead__lead">
+            Wir schauen deinen Prozess gemeinsam an und sagen dir ehrlich,
+            ob sich eine Umsetzung lohnt.
+          </p>
+
+          <div class="wz-lead__grid">
+            <p class="wz-field">
+              <label class="wz-field__label" for="lead-name">Name <span aria-hidden="true">*</span></label>
+              <input class="wz-input" id="lead-name" name="name" type="text" maxlength="200"
+                     autocomplete="name" required aria-describedby="lead-name-fehler">
+              <span class="wz-field__error" id="lead-name-fehler" hidden></span>
+            </p>
+
+            <p class="wz-field">
+              <label class="wz-field__label" for="lead-firma">Firma</label>
+              <input class="wz-input" id="lead-firma" name="firma" type="text" maxlength="200"
+                     autocomplete="organization">
+            </p>
+
+            <p class="wz-field">
+              <label class="wz-field__label" for="lead-email">E-Mail <span aria-hidden="true">*</span></label>
+              <input class="wz-input" id="lead-email" name="email" type="email" maxlength="200"
+                     inputmode="email" autocomplete="email" required aria-describedby="lead-email-fehler">
+              <span class="wz-field__error" id="lead-email-fehler" hidden></span>
+            </p>
+
+            <p class="wz-field">
+              <label class="wz-field__label" for="lead-telefon">Telefon</label>
+              <input class="wz-input" id="lead-telefon" name="telefon" type="tel" maxlength="200"
+                     autocomplete="tel">
+            </p>
+
+            <p class="wz-field wz-field--voll">
+              <label class="wz-field__label" for="lead-nachricht">Noch etwas, das wir wissen sollten?</label>
+              <textarea class="wz-input" id="lead-nachricht" name="nachricht" rows="2" maxlength="2000"></textarea>
+            </p>
+          </div>
+
+          <!-- Honigtopf: für Menschen unsichtbar -->
+          <div class="wz-honig" aria-hidden="true">
+            <label for="lead-website">Website</label>
+            <input id="lead-website" name="website" type="text" tabindex="-1" autocomplete="off">
+          </div>
+
+          <label class="wz-consent">
+            <input type="checkbox" name="einverstanden" required aria-describedby="lead-consent-fehler">
+            <span>
+              Ich bin einverstanden, dass 1Automationen meine Angaben zur
+              Bearbeitung meiner Anfrage verwendet.
+              <a href="#datenschutz">Datenschutzerklärung</a>
+            </span>
+          </label>
+          <span class="wz-field__error" id="lead-consent-fehler" hidden></span>
+
+          <p class="wz-datenschutz">
+            <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><use href="#pi-lock"/></svg>
+            <span>
+              Wir nutzen deine Angaben ausschliesslich, um deinen Prozess zu besprechen.
+              Keine Weitergabe an Dritte. Zur Analyse wird deine Prozessbeschreibung
+              an unseren KI-Dienstleister übermittelt.
+            </span>
+          </p>
+
+          <div class="wz-lead__actions">
+            <button class="btn btn--primary btn--lg" type="button" data-lead-submit>Ergebnis abschicken</button>
+            <p class="wz-lead__message" role="status" data-lead-message></p>
+          </div>
+        </div>
+
+        <!-- Bestätigung -->
+        <div class="wz-danke" data-danke hidden>
+          <svg class="wz-danke__icon" width="32" height="32" viewBox="0 0 24 24" aria-hidden="true"><use href="#pi-check"/></svg>
+          <h3 class="wz-danke__title" data-danke-title>Danke!</h3>
+          <p class="wz-danke__text">Wir melden uns innerhalb eines Werktags bei dir.</p>
+          <div class="wz-danke__actions">
+            <button class="btn btn--secondary" type="button" data-drucken>
+              <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><use href="#pi-print"/></svg>
+              Ergebnis drucken
+            </button>
+            <button class="btn btn--ghost" type="button" data-neustart>Neuen Check starten</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- --------------------- NAVIGATION --------------------- -->
+      <div class="wz-nav" data-nav>
+        <button class="btn btn--secondary" type="button" data-zurueck hidden>
+          <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><use href="#pi-arrow-left"/></svg>
+          Zurück
+        </button>
+        <span class="wz-nav__spacer"></span>
+        <button class="btn btn--primary btn--lg" type="button" data-weiter>
+          <span data-weiter-text>Weiter</span>
+          <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" data-weiter-icon><use href="#pi-arrow-right"/></svg>
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Vertrauen -->
+  <div class="pc-trust">
+    <p>
+      Deine Angaben bleiben bei uns und dienen ausschliesslich der Einschätzung
+      deines Prozesses. Erst am Ende entscheidest du, ob du uns kontaktieren möchtest.
+    </p>
+  </div>
+</main>
+
+<footer class="pc-footer">
+  <div class="pc-footer__inner">
+    <p class="pc-footer__brand">1Automationen</p>
+    <ul class="pc-footer__links">
+      <li><a href="/">Startseite</a></li>
+      <li><a href="#impressum">Impressum</a></li>
+      <li><a href="#datenschutz">Datenschutz</a></li>
+      <li><a href="#kontakt">Kontakt</a></li>
+    </ul>
+  </div>
+</footer>
+
+<noscript>
+  <div class="pc-noscript">
+    <p>
+      Für den Prozesscheck wird JavaScript benötigt. Schreib uns stattdessen
+      gerne direkt eine kurze Beschreibung deines Ablaufs — wir melden uns mit
+      einer Einschätzung.
+    </p>
+  </div>
+</noscript>
+
+<script src="assets/js/app.js" defer></script>
+<script src="assets/js/prozesscheck.js" defer></script>
+</body>
+</html>
