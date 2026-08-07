@@ -522,17 +522,13 @@ ul { list-style: none; margin: 0; padding: 0; }
   margin: clamp(40px, 7vw, 88px) auto 0;
   max-width: 1120px;
 }
-.hero__media img,
-.hero__media video {
+.hero__media img {
   display: block;
   width: 100%; height: auto;
   border-radius: var(--radius-lg) var(--radius-lg) 0 0;
   box-shadow: var(--shadow-lg);
   background: var(--surface);
 }
-
-/* Solange das Video lädt, steht hier eine ruhige Fläche statt Schwarz. */
-.hero__video { object-fit: cover; }
 
 /* =========================================================================
    Breakpoints
