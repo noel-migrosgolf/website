@@ -1,8 +1,10 @@
 # 1Automationen – Website
 
 Statische Landingpage — Header (Logo, Menüs, Suche) und **ein** Hero-Bereich mit
-Gitter-Hintergrund und Kreis-Ausschnitt an der Mausposition. Kein Build-Schritt,
-keine Abhängigkeiten.
+Gitter-Hintergrund und Kreis-Ausschnitt an der Mausposition, dazu der
+**KI-Prozesscheck** unter `/prozesscheck.html`. Das Frontend hat weiterhin
+keinen Build-Schritt und keine Abhängigkeiten; das Backend besteht aus drei
+Node-Funktionen ohne Fremdpakete.
 
 > **Logo:** `assets/img/logo.svg` und `assets/img/favicon.svg` sind nach Vorlage
 > nachgezeichnet, nicht die Originaldateien. Sobald das Original vorliegt,
@@ -11,10 +13,19 @@ keine Abhängigkeiten.
 
 ```
 index.html
+prozesscheck.html              ← KI-Prozesscheck
 assets/css/styles.css
+assets/css/prozesscheck.css
 assets/js/app.js
-assets/img/hero.svg         ← Platzhalter-Foto, ersetzen
-assets/fonts/outfit-*.woff2 ← Outfit, lokal gehostet
+assets/js/prozesscheck.js
+assets/img/hero.svg            ← Platzhalter-Foto, ersetzen
+assets/fonts/outfit-*.woff2    ← Outfit, lokal gehostet
+api/verstehen.js               ← Ablauf-Erkennung (Schritt 2)
+api/analyse.js                 ← Prozessanalyse (Schritt 5)
+api/lead.js                    ← Kontaktformular
+api/_lib/                      ← Prompts, Schema, Rechnen, Bereinigen
+server.js                      ← lokaler Server, nur für Entwicklung
+docs/prompt-ki-prozesscheck.md ← vollständige Spezifikation
 ```
 
 ## Schrift
@@ -34,8 +45,89 @@ Die Latin-Datei wird im `<head>` per `rel="preload"` vorgeladen, damit die
 ## Lokal ansehen
 
 ```bash
-python3 -m http.server 8000   # → http://localhost:8000
+node server.js                # → http://localhost:8000
 ```
+
+`server.js` liefert die statischen Dateien **und** die drei API-Endpunkte und
+liest beim Start eine vorhandene `.env` ein. Für die reine Landingpage genügt
+weiterhin `python3 -m http.server 8000`; der Prozesscheck läuft dann bis zum
+Kontaktformular und zeigt bei der Analyse den Rückfall.
+
+## KI-Prozesscheck
+
+Ein Wizard in fünf Schritten: Ziel, Prozessbeschreibung, beteiligte Systeme,
+Aufwand, Analyse. Am Ende sieht der Besucher seinen Ist-Ablauf, den möglichen
+Soll-Ablauf und die Kennzahlen — **vor** jeder Kontaktangabe. Erst darunter
+steht das Formular.
+
+Die vollständige Spezifikation samt Bewertungsankern, Schema und Copy steht in
+[`docs/prompt-ki-prozesscheck.md`](docs/prompt-ki-prozesscheck.md).
+
+### Umgebungsvariablen
+
+`.env.example` nach `.env` kopieren und ausfüllen. `.env` steht in
+`.gitignore` — **der Schlüssel gehört nie ins Repository und nie ins
+Frontend.** Auf gehosteten Plattformen die Werte in den Projekteinstellungen
+setzen, nicht als Datei ausliefern.
+
+| Variable | Bedeutung |
+| --- | --- |
+| `OPENAI_API_KEY` | Pflicht. Fehlt er, antworten die KI-Endpunkte mit 503 und der Wizard zeigt den Rückfall. |
+| `OPENAI_MODEL` | Modell für die Analyse in Schritt 5 |
+| `OPENAI_MODEL_FAST` | Modell für die Ablauf-Erkennung in Schritt 2 |
+| `OPENAI_BASE_URL` | Für europäische Datenhaltung auf `https://eu.api.openai.com/v1` setzen |
+| `LEAD_EMPFAENGER` | Empfängeradresse der Anfragen |
+| `RESEND_API_KEY` | Optional. Ohne Schlüssel landen Anfragen nur in `data/leads.jsonl`. |
+| `RATE_LIMIT_*` | Aufrufe je IP und Stunde |
+
+### Wie die Zahlen entstehen
+
+Das Modell liefert **Urteile**, der Code liefert **Zahlen**. Diese Trennung
+steht in `api/_lib/rechnen.js` und ist der Grund, warum gleiche Eingaben immer
+dasselbe Ergebnis geben.
+
+Das Modell bewertet acht Kriterien von 0 bis 100 und markiert jeden Ist-Schritt
+mit `voll`, `teilweise` oder `nein`. Daraus berechnet der Server:
+
+* **Aufwand** = Läufe pro Monat × Minuten je Lauf. Die Personenzahl ist
+  **kein** Multiplikator — die Häufigkeit ist bereits die Gesamtzahl über alle
+  Personen. Ohne diese Trennung entstehen absurde Einsparversprechen.
+* **Einsparung** = Summe der Zeitanteile der automatisierbaren Schritte,
+  gedeckelt bei 85 % und gedämpft, wenn sich die Systeme schlecht anbinden
+  lassen. Ausgabe immer als Bandbreite.
+* **Digitalisierungs-Potenzial** steigt, wenn der Digitalisierungsgrad
+  **sinkt** — wer schon digital arbeitet, gewinnt hier nichts mehr.
+* **KI-Potenzial** steigt, wenn die Regelbasiertheit **sinkt** — was sich in
+  Regeln fassen lässt, braucht eine Regel, keine KI.
+* Unter einer Stunde im Monat wird der Gesamtwert bei 60 gedeckelt und der
+  Hinweis eingeblendet, dass der Nutzen bei Qualität liegt, nicht bei Zeit.
+
+Der Stundensatz für die Frankenrechnung steht an zwei Stellen und muss
+zusammen geändert werden: `STUNDENSATZ_CHF` in `api/_lib/rechnen.js` und in
+`assets/js/prozesscheck.js`.
+
+### Piktogramme
+
+Keine Icon-Bibliothek. Die Piktogramme stehen als `<g>`-Sprite am Anfang von
+`prozesscheck.html` und werden über `<use href="#pi-…">` eingebunden. Regeln:
+`viewBox 0 0 24 24`, `fill: none`, `stroke: currentColor`, `stroke-width: 1.6`,
+runde Enden. Die Werte setzt `svg use` in `prozesscheck.css` — sie kaskadieren
+in den referenzierten Inhalt. **Emojis kommen nirgends vor**, auch nicht in
+den Antworten der KI: `api/_lib/bereinigen.js` entfernt sie vorsorglich.
+
+### Was noch offen ist
+
+* Die Modellbezeichnung in `.env.example` stammt aus der Konzeptphase und ist
+  bewusst als Umgebungsvariable gehalten. **Vor dem Livegang gegen die
+  aktuelle OpenAI-Dokumentation prüfen.**
+* Impressum, Datenschutzerklärung und Kontaktseite sind in
+  `prozesscheck.html` als Anker verlinkt, aber noch nicht geschrieben. Die
+  Einverständnisformulierung gehört juristisch geprüft.
+* Die Ratenbegrenzung liegt im Arbeitsspeicher und wirkt auf serverlosem
+  Hosting je Instanz. Für harte Grenzen `pruefe()` in
+  `api/_lib/ratelimit.js` gegen einen gemeinsamen Zähldienst tauschen.
+* Die Kopfzeile ist in `index.html` und `prozesscheck.html` dupliziert —
+  ohne Build-Schritt gibt es keine Vorlagen. Beide Blöcke sind markiert.
 
 ## Der Hintergrund-Effekt
 
@@ -106,6 +198,7 @@ Bei `prefers-reduced-motion: reduce` sind alle Blöcke sofort sichtbar.
 
 ## Noch offen
 
-Das Anmeldeformular ist rein clientseitig: Es prüft die E-Mail-Adresse und zeigt
-eine Bestätigung an, sendet aber nichts. Der Endpunkt gehört in
-`initSignup()` in `assets/js/app.js`.
+Das Anmeldeformular im Hero ist weiterhin rein clientseitig: Es prüft die
+E-Mail-Adresse und zeigt eine Bestätigung an, sendet aber nichts. Der Endpunkt
+gehört in `initSignup()` in `assets/js/app.js`. Der Prozesscheck ist davon
+unabhängig und hat mit `/api/lead` ein eigenes, angebundenes Formular.

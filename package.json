@@ -1,0 +1,14 @@
+{
+  "name": "1automationen-website",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Statische Website mit KI-Prozesscheck. Frontend ohne Build-Schritt, Backend ohne Abhängigkeiten.",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

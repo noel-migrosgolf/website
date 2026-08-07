@@ -181,6 +181,7 @@
 
     /* Durchsuchbarer Index – hier später echte Seiten eintragen. */
     var INDEX = [
+      { title: "Prozesscheck",         category: "Produkt",    desc: "In zwei Minuten sehen, was sich in deinem Ablauf automatisieren lässt.", href: "/prozesscheck.html" },
       { title: "Alle Features",        category: "Funktionen", desc: "Der komplette Überblick über die Plattform.", href: "#" },
       { title: "Seiten und Dokumente", category: "Funktionen", desc: "Schreiben, strukturieren und gemeinsam teilen.", href: "#" },
       { title: "Whiteboards",          category: "Funktionen", desc: "Vom ersten Einfall zum fertigen Plan.", href: "#" },

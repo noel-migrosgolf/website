@@ -1,0 +1,10 @@
+# Geheimnisse – gehören niemals ins Repository.
+.env
+.env.*
+!.env.example
+
+# Lokale Ablage der Anfragen aus dem Prozesscheck
+data/leads.jsonl
+
+node_modules/
+.DS_Store

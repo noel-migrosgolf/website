@@ -1727,7 +1727,8 @@ Der Server hängt das Ergebnis der Rechnung an die Antwort:
   "zeitaufwand": 28,
   "komplexitaet": "mittel",
   "umsetzungsdauer": "2 bis 4 Wochen",
-  "gedeckelt": false
+  "gedeckelt": false,
+  "geringes_volumen": false
 }
 ```
 
