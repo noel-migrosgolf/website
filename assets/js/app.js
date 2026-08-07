@@ -4,6 +4,7 @@
    2) Header: Dropdown-Menüs
    3) Header: Suchfunktion
    4) Mobile-Navigation, Signup, Sticky-Header
+   5) Hero: Video
    ========================================================================= */
 (function () {
   "use strict";
@@ -399,5 +400,64 @@
       requestAnimationFrame(update);
     }, { passive: true });
     update();
+  })();
+
+  /* =======================================================================
+     5) Hero: Video
+     --------------------------------------------------------------------
+     Das Video läuft von selbst in einer Schleife. Zwei Eingriffe:
+
+     - Ausserhalb des Blickfelds wird es angehalten. Ein unsichtbares Video
+       weiterlaufen zu lassen kostet nur Akku, sichtbar ändert sich nichts.
+     - Bei reduzierter Bewegung bleibt es beim ersten Bild stehen. Ein
+       Standbild statt einer schwarzen Fläche – deshalb pausieren statt
+       verbergen.
+
+     Browser lehnen die automatische Wiedergabe gelegentlich ab, etwa im
+     Stromsparmodus. Dann wird beim ersten Antippen der Seite ein zweites
+     Mal versucht; klappt auch das nicht, bleibt schlicht das erste Bild.
+     ===================================================================== */
+  (function initHeroVideo() {
+    var video = document.querySelector("[data-hero-video]");
+    if (!video) return;
+
+    if (reduceMotion) {
+      video.removeAttribute("autoplay");
+      video.autoplay = false;
+      video.pause();
+      // Ohne Poster zeigt das Element erst nach dem Laden ein Bild.
+      video.addEventListener("loadeddata", function () { video.pause(); });
+      return;
+    }
+
+    var darfLaufen = true;   // wird von der Sichtbarkeit gesetzt
+
+    function starte() {
+      if (!darfLaufen) return;
+      var versuch = video.play();
+      if (versuch && versuch.catch) versuch.catch(function () { /* still */ });
+    }
+
+    if ("IntersectionObserver" in window) {
+      // Der Beobachter meldet sich sofort mit dem Ist-Zustand – der erste
+      // Aufruf startet die Wiedergabe also bereits.
+      new IntersectionObserver(function (eintraege) {
+        eintraege.forEach(function (eintrag) {
+          darfLaufen = eintrag.isIntersecting;
+          if (darfLaufen) starte();
+          else video.pause();
+        });
+      }, { threshold: 0.1 }).observe(video);
+    } else {
+      starte();
+    }
+
+    // Zweiter Anlauf, sobald der Besucher die Seite anfasst.
+    ["pointerdown", "keydown", "touchstart"].forEach(function (art) {
+      document.addEventListener(art, function nachholen() {
+        document.removeEventListener(art, nachholen);
+        if (video.paused) starte();
+      }, { once: true, passive: true });
+    });
   })();
 })();

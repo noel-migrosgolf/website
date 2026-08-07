@@ -18,7 +18,8 @@ assets/css/styles.css
 assets/css/prozesscheck.css
 assets/js/app.js
 assets/js/prozesscheck.js
-assets/img/hero.svg            ← Platzhalter-Foto, ersetzen
+assets/img/hero.svg            ← nicht mehr im Hero, Platzhalter
+assets/video/hero.mp4          ← Hero-Video
 assets/fonts/outfit-*.woff2    ← Outfit, lokal gehostet
 api/verstehen.js               ← Ablauf-Erkennung (Schritt 2)
 api/analyse.js                 ← Prozessanalyse (Schritt 5)
@@ -215,6 +216,40 @@ den Antworten der KI: `api/_lib/bereinigen.js` entfernt sie vorsorglich.
   `api/_lib/ratelimit.js` gegen einen gemeinsamen Zähldienst tauschen.
 * Die Kopfzeile ist in `index.html` und `prozesscheck.html` dupliziert —
   ohne Build-Schritt gibt es keine Vorlagen. Beide Blöcke sind markiert.
+
+## Hero-Video
+
+Im Hero läuft `assets/video/hero.mp4` (1280×720, 10 s, H.264/AAC, 2.5 MB) in
+einer Endlosschleife an der Stelle, wo vorher das Platzhalterbild stand.
+
+Stummgeschaltet, ohne Bedienelemente, mit `playsinline` — nur unter diesen
+Bedingungen lassen Browser die automatische Wiedergabe zu. `initHeroVideo()`
+in `app.js` ergänzt zwei Dinge:
+
+* **Ausserhalb des Blickfelds wird angehalten.** Ein unsichtbares Video
+  weiterlaufen zu lassen kostet nur Akku. Auf der heutigen Startseite greift
+  das noch nicht, weil die Seite zu kurz ist und das Video nie aus dem Blick
+  scrollt — sobald Bereiche darunter dazukommen, schon.
+* **Bei `prefers-reduced-motion: reduce` bleibt es beim ersten Bild stehen.**
+  Deshalb pausieren statt verbergen: ein Standbild ist besser als eine leere
+  Fläche.
+
+Lehnt ein Browser die automatische Wiedergabe ab (etwa im Stromsparmodus),
+wird beim ersten Antippen der Seite ein zweites Mal versucht.
+
+Video ersetzen: Datei unter `assets/video/hero.mp4` austauschen. Ein anderes
+Seitenverhältnis als 16:9 braucht angepasste `width`/`height` am `<video>` in
+`index.html`.
+
+> **Codec:** H.264 in MP4 ist der am breitesten unterstützte Codec im Web und
+> die richtige Wahl. Beachten: Playwrights Chromium ist der quelloffene Build
+> **ohne** proprietäre Codecs — dort lässt sich die Wiedergabe nicht testen,
+> nur die Steuerung. In echten Browsern läuft es.
+
+`server.js` liefert Videos korrekt aus: `video/mp4` als Typ, `Accept-Ranges`
+und `206 Partial Content` fürs Spulen, `ETag` und `Last-Modified` gegen
+unnötige Übertragungen. Ohne diese drei Punkte lädt jeder Seitenaufruf die
+vollen 2.5 MB neu.
 
 ## Der Hintergrund-Effekt
 
