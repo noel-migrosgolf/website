@@ -60,6 +60,19 @@ Aufwand, Analyse. Am Ende sieht der Besucher seinen Ist-Ablauf, den möglichen
 Soll-Ablauf und die Kennzahlen — **vor** jeder Kontaktangabe. Erst darunter
 steht das Formular.
 
+Die Seite baut sich ohne Einblendung auf — das gehört zur Startseite, nicht
+zu einer Arbeitsseite. Übernommen ist dagegen der Gitter-Hintergrund mit dem
+Kreis-Ausschnitt an der Mausposition: `initGridReveal()` in `app.js` findet
+den Block über `data-grid-hero` und `data-grid`, die Seite setzt nur
+`--hero-bg` auf ihre eigene Grundfarbe.
+
+Um die Wizard-Karte wandert ein Lichtrand. Er entsteht aus einem
+Kegelverlauf, dessen Startwinkel über `@property --pc-winkel` animiert wird —
+ein typisierter Winkel, weil sich Custom Properties sonst nicht animieren
+lassen. Fehlt `@property`, steht der Verlauf still und bleibt ein ruhiger
+farbiger Rand. Gemessen kostet die Animation auf 390 px keinen Bildabstand;
+bei `prefers-reduced-motion` steht sie ohnehin.
+
 Die vollständige Spezifikation samt Bewertungsankern, Schema und Copy steht in
 [`docs/prompt-ki-prozesscheck.md`](docs/prompt-ki-prozesscheck.md).
 

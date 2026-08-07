@@ -22,32 +22,43 @@ svg use {
 
 /* =========================================================================
    Seitenrahmen
+
+   Der Gitter-Hintergrund der Startseite wird hier wiederverwendet: die
+   Ebenen stecken in .hero__grid (styles.css), diese Seite setzt nur die
+   Grundfarbe, an der sich der Kreis-Ausschnitt orientiert.
    ========================================================================= */
 .pc {
   position: relative;
+  isolation: isolate;
+  /* Kein overflow: hidden – das machte .pc zum Scroll-Container und die
+     klebende Navigationsleiste auf Mobilgeräten würde nicht mehr kleben.
+     Das Gitter begrenzt sich ohnehin selbst über inset: 0. */
   padding: clamp(32px, 6vw, 64px) 20px clamp(56px, 8vw, 96px);
   background: var(--surface-sunken);
   min-height: calc(100vh - var(--header-height));
 }
-.pc::before {
-  content: "";
-  position: absolute; inset: 0 0 auto;
-  height: 420px;
-  background: linear-gradient(var(--brand-soft), var(--surface-sunken));
-  pointer-events: none;
-}
+
+/* Der Inhalt liegt über dem Gitter. Kein z-index nötig: beide sind
+   positioniert, also entscheidet die Reihenfolge im Dokument. */
 .pc > * { position: relative; }
 
-.pc__intro { max-width: 720px; margin-inline: auto; text-align: center; }
+.pc__grid {
+  --hero-bg: var(--surface-sunken);   /* Farbe, die den Kreis begrenzt */
+  position: absolute;
+  inset: 0;
+}
+
+.pc__intro { max-width: 780px; margin-inline: auto; text-align: center; }
 
 .pc__title {
   margin: 0;
-  font-size: clamp(1.75rem, 4.6vw, 2.75rem);
-  line-height: 1.1;
-  letter-spacing: -.025em;
+  font-size: clamp(2.125rem, 6vw, 3.75rem);
+  line-height: 1.06;
+  letter-spacing: -.03em;
   font-weight: 700;
   text-wrap: balance;
 }
+.pc__akzent { color: var(--brand); }
 
 .pc__lead {
   margin: 14px auto 0;
@@ -69,64 +80,6 @@ svg use {
 }
 
 /* =========================================================================
-   Fortschritt
-   ========================================================================= */
-.pc-progress { max-width: 720px; margin: clamp(28px, 4vw, 40px) auto 0; }
-
-.pc-progress__list { display: none; }
-
-.pc-progress__btn {
-  display: flex; align-items: center; gap: 8px;
-  width: 100%; padding: 0;
-  background: none; border: 0;
-  color: var(--text-subtle);
-  cursor: default;
-  text-align: start;
-}
-.pc-progress__item:not(.is-current):not(.is-done) .pc-progress__btn { cursor: not-allowed; }
-.pc-progress__item.is-done .pc-progress__btn { cursor: pointer; color: var(--text-muted); }
-.pc-progress__item.is-done .pc-progress__btn:hover { color: var(--text); }
-.pc-progress__item.is-current .pc-progress__btn { color: var(--text); }
-
-.pc-progress__num {
-  display: inline-flex; align-items: center; justify-content: center;
-  flex: 0 0 auto;
-  width: 26px; height: 26px;
-  border: 2px solid var(--border);
-  border-radius: var(--radius-pill);
-  font-size: .8125rem; font-weight: 700;
-  background: var(--surface);
-  transition: background-color .15s var(--ease), border-color .15s var(--ease),
-              color .15s var(--ease);
-}
-.pc-progress__item.is-current .pc-progress__num {
-  border-color: var(--brand); color: var(--brand);
-}
-.pc-progress__item.is-done .pc-progress__num {
-  background: var(--brand); border-color: var(--brand); color: #fff;
-}
-
-.pc-progress__label { font-size: .875rem; font-weight: 600; }
-
-.pc-progress__mobile {
-  display: flex; align-items: center; gap: 12px;
-  margin: 0;
-  font-size: .8125rem; font-weight: 600; color: var(--text-muted);
-}
-.pc-progress__bar {
-  flex: 1 1 auto; height: 4px;
-  background: var(--border);
-  border-radius: var(--radius-pill);
-  overflow: hidden;
-}
-.pc-progress__bar > span {
-  display: block; height: 100%; width: 20%;
-  background: var(--brand);
-  border-radius: inherit;
-  transition: width .3s var(--ease);
-}
-
-/* =========================================================================
    Wiederaufnahme
    ========================================================================= */
 .pc-resume {
@@ -142,20 +95,74 @@ svg use {
 .pc-resume__actions { display: flex; gap: 8px; }
 
 /* =========================================================================
-   Karte
+   Karte mit wanderndem Lichtrand
+
+   Der Rand ist ein Kegelverlauf, dessen Startwinkel animiert wird. Weil
+   Custom Properties normalerweise nicht animierbar sind, wird --pc-winkel
+   über @property als Winkel typisiert. Wo das fehlt, bleibt der Verlauf
+   stehen – dann ist es ein ruhiger farbiger Rand statt gar keinem.
    ========================================================================= */
+@property --pc-winkel {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
 .pc-card {
+  position: relative;
   max-width: 720px;
   margin: clamp(20px, 3vw, 28px) auto 0;
-  background: var(--surface);
-  border: 1px solid var(--border);
   border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-md);
   transition: max-width .3s var(--ease);
 }
 .pc-card.is-breit { max-width: 1080px; }
 
-.pc-form { padding: clamp(24px, 4vw, 40px); }
+.pc-card__aura {
+  position: absolute;
+  inset: -1.5px;
+  border-radius: calc(var(--radius-lg) + 1.5px);
+  background: conic-gradient(
+    from var(--pc-winkel),
+    var(--border)                                        0deg,
+    color-mix(in srgb, var(--brand) 85%, transparent)   50deg,
+    color-mix(in srgb, var(--logo-blue) 75%, transparent) 95deg,
+    var(--border)                                      160deg,
+    var(--border)                                      210deg,
+    color-mix(in srgb, var(--ai) 70%, transparent)     280deg,
+    var(--border)                                      345deg
+  );
+  animation: pc-drehen 11s linear infinite;
+  pointer-events: none;
+}
+
+/* Zweite, unscharfe Lage: der eigentliche Schein nach aussen. Sie ragt
+   weiter hinaus als der Rand, sonst gibt es zu wenig Farbfläche, aus der
+   die Unschärfe einen Schein machen kann. */
+.pc-card__aura::after {
+  content: "";
+  position: absolute;
+  inset: -7px;
+  border-radius: calc(var(--radius-lg) + 8px);
+  background: inherit;
+  filter: blur(20px);
+  opacity: .55;
+}
+
+@keyframes pc-drehen { to { --pc-winkel: 360deg; } }
+
+.pc-form {
+  position: relative;
+  padding: clamp(24px, 4vw, 40px);
+  background: var(--surface);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+}
+
+/* Ein wanderndes Licht ist Zierde, kein Hinweis: bei reduzierter Bewegung
+   bleibt der Rand ruhig stehen. */
+@media (prefers-reduced-motion: reduce) {
+  .pc-card__aura { animation: none; }
+}
 
 /* =========================================================================
    Schritt
@@ -417,7 +424,13 @@ textarea.wz-input { height: auto; padding: 10px 12px; }
   text-transform: uppercase; color: var(--text-subtle);
 }
 
-.wz-chips { display: flex; flex-wrap: wrap; gap: 7px; margin: 0; padding: 0; }
+/* Wird in Schritt 3 als <fieldset> erzeugt – ohne border: 0 schlägt der
+   Standardrahmen des Browsers durch und rahmt jede Kategorie ein. */
+.wz-chips {
+  display: flex; flex-wrap: wrap; gap: 7px;
+  margin: 0; padding: 0; border: 0;
+  min-inline-size: 0;
+}
 
 .wz-chip { display: inline-block; cursor: pointer; }
 .wz-chip input {
@@ -896,25 +909,17 @@ textarea.wz-input { height: auto; padding: 10px 12px; }
   .wz-textarea__fuss { flex-wrap: wrap; }
 }
 
-@media (min-width: 620px) {
-  .pc-progress__list {
-    display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px;
-  }
-  .pc-progress__mobile { display: none; }
-}
-
 /* =========================================================================
    Drucken
    ========================================================================= */
 @media print {
-  .site-header, .mobile-nav, .pc-progress, .pc-resume, .pc-footer,
-  .wz-nav, .wz-lead, .wz-neben, .wz-danke__actions, .skip-link,
-  .pc__meta, .pc-trust { display: none !important; }
+  .site-header, .mobile-nav, .pc-resume, .pc-footer, .pc__grid,
+  .pc-card__aura, .wz-nav, .wz-lead, .wz-neben, .wz-danke__actions,
+  .skip-link, .pc__meta, .pc-trust { display: none !important; }
 
   .pc { padding: 0; background: none; min-height: 0; }
-  .pc::before { display: none; }
-  .pc-card { max-width: none; margin: 0; border: 0; box-shadow: none; }
-  .pc-form { padding: 0; }
+  .pc-card { max-width: none; margin: 0; }
+  .pc-form { padding: 0; border: 0; box-shadow: none; }
 
   .wz-block, .wz-node, .wz-kpi, .wz-vorgehen li, .wz-hinweis {
     break-inside: avoid;

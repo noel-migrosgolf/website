@@ -140,63 +140,29 @@
 </div>
 
 <!-- ============================= INHALT ============================= -->
-<main id="main" class="pc">
+<main id="main" class="pc" data-grid-hero>
+
+  <!-- Gitter-Hintergrund mit Kreis-Ausschnitt an der Mausposition.
+       Nutzt dieselben Ebenen wie der Hero der Startseite; initGridReveal()
+       in app.js findet den Block über data-grid-hero und data-grid. -->
+  <div class="hero__grid pc__grid" data-grid aria-hidden="true"></div>
 
   <div class="pc__intro">
-    <h1 class="pc__title fade-up" style="--enter-index: 0">
-      Wie viel Potenzial steckt in deinem Prozess?
+    <h1 class="pc__title">
+      Wie viel <span class="pc__akzent">Potenzial</span> steckt in
+      deinem <span class="pc__akzent">Prozess</span>?
     </h1>
     <!-- Alternative: Was würdest du gerne nie wieder von Hand machen? -->
-    <p class="pc__lead fade-up" style="--enter-index: 1">
+    <p class="pc__lead">
       Beschreibe deinen Ablauf in wenigen Schritten. Unsere KI analysiert,
       wo sich Digitalisierung und Automatisierung wirklich lohnen.
     </p>
-    <ul class="pc__meta fade-up" style="--enter-index: 2">
+    <ul class="pc__meta">
       <li>Rund 2 Minuten</li>
       <li>Keine Registrierung</li>
       <li>Ergebnis sofort sichtbar</li>
     </ul>
   </div>
-
-  <!-- Fortschritt -->
-  <nav class="pc-progress fade-up" style="--enter-index: 3" aria-label="Fortschritt" data-progress>
-    <ol class="pc-progress__list">
-      <li class="pc-progress__item is-current" data-progress-item="1" aria-current="step">
-        <button type="button" class="pc-progress__btn" disabled>
-          <span class="pc-progress__num" aria-hidden="true">1</span>
-          <span class="pc-progress__label">Ziel</span>
-        </button>
-      </li>
-      <li class="pc-progress__item" data-progress-item="2">
-        <button type="button" class="pc-progress__btn" disabled>
-          <span class="pc-progress__num" aria-hidden="true">2</span>
-          <span class="pc-progress__label">Prozess</span>
-        </button>
-      </li>
-      <li class="pc-progress__item" data-progress-item="3">
-        <button type="button" class="pc-progress__btn" disabled>
-          <span class="pc-progress__num" aria-hidden="true">3</span>
-          <span class="pc-progress__label">Systeme</span>
-        </button>
-      </li>
-      <li class="pc-progress__item" data-progress-item="4">
-        <button type="button" class="pc-progress__btn" disabled>
-          <span class="pc-progress__num" aria-hidden="true">4</span>
-          <span class="pc-progress__label">Aufwand</span>
-        </button>
-      </li>
-      <li class="pc-progress__item" data-progress-item="5">
-        <button type="button" class="pc-progress__btn" disabled>
-          <span class="pc-progress__num" aria-hidden="true">5</span>
-          <span class="pc-progress__label">Analyse</span>
-        </button>
-      </li>
-    </ol>
-    <p class="pc-progress__mobile">
-      <span data-progress-text>Schritt 1 von 5</span>
-      <span class="pc-progress__bar" aria-hidden="true"><span data-progress-bar></span></span>
-    </p>
-  </nav>
 
   <!-- Wiederaufnahme -->
   <div class="pc-resume" data-resume hidden>
@@ -208,7 +174,10 @@
   </div>
 
   <!-- ============================ WIZARD ============================ -->
-  <div class="pc-card fade-up" id="wizard" style="--enter-index: 4">
+  <div class="pc-card" id="wizard">
+    <!-- Wandernder Lichtrand. Rein dekorativ, liegt unter dem Formular. -->
+    <span class="pc-card__aura" aria-hidden="true"></span>
+
     <form class="pc-form" novalidate data-wizard>
 
       <!-- ---------------------- SCHRITT 1: ZIEL ---------------------- -->

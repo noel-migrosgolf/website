@@ -200,9 +200,6 @@
   var knopfWeiter = el("[data-weiter]", wizard);
   var weiterText = el("[data-weiter-text]", wizard);
   var weiterIcon = el("[data-weiter-icon]", wizard);
-  var fortschritt = el("[data-progress]");
-  var fortschrittText = el("[data-progress-text]");
-  var fortschrittBalken = el("[data-progress-bar]");
   var karte = el(".pc-card");
   var erstesZeigen = true;
 
@@ -237,25 +234,6 @@
     return true;
   }
 
-  function aktualisiereFortschritt() {
-    els("[data-progress-item]", fortschritt).forEach(function (eintrag) {
-      var nummer = Number(eintrag.dataset.progressItem);
-      var knopf = el(".pc-progress__btn", eintrag);
-
-      eintrag.classList.toggle("is-current", nummer === zustand.schritt);
-      eintrag.classList.toggle("is-done", nummer < zustand.schritt);
-
-      if (nummer === zustand.schritt) eintrag.setAttribute("aria-current", "step");
-      else eintrag.removeAttribute("aria-current");
-
-      // Rückwärts springen ist erlaubt, vorwärts nicht.
-      knopf.disabled = nummer >= zustand.schritt || zustand.gesendet;
-    });
-
-    if (fortschrittText) fortschrittText.textContent = "Schritt " + zustand.schritt + " von 5";
-    if (fortschrittBalken) fortschrittBalken.style.width = (zustand.schritt / 5 * 100) + "%";
-  }
-
   function zeigeSchritt(nummer, mitVerlauf) {
     zustand.schritt = nummer;
 
@@ -276,12 +254,11 @@
 
     if (karte) karte.classList.toggle("is-breit", nummer === LETZTER_SCHRITT);
 
-    aktualisiereFortschritt();
     speichern();
 
     // Beim ersten Aufbau weder Fokus setzen noch scrollen: der Besucher
-    // soll die Überschrift und die Fortschrittsanzeige sehen, und ein
-    // Fokussprung beim Laden ist irritierend.
+    // soll oben bei der Überschrift beginnen, und ein Fokussprung beim
+    // Laden ist irritierend.
     if (erstesZeigen) { erstesZeigen = false; return; }
 
     var abschnitt = abschnittVon(nummer);
@@ -310,13 +287,6 @@
   knopfWeiter.addEventListener("click", weiter);
   knopfZurueck.addEventListener("click", function () {
     if (zustand.schritt > 1) zeigeSchritt(zustand.schritt - 1);
-  });
-
-  els("[data-progress-item] .pc-progress__btn", fortschritt).forEach(function (knopf) {
-    knopf.addEventListener("click", function () {
-      var nummer = Number(knopf.closest("[data-progress-item]").dataset.progressItem);
-      if (nummer < zustand.schritt) zeigeSchritt(nummer);
-    });
   });
 
   window.addEventListener("popstate", function (ereignis) {
@@ -1613,7 +1583,6 @@
       kastenDanke.hidden = false;
       zustand.gesendet = true;
       leeren();
-      aktualisiereFortschritt();
       fokussiere(titel);
     }
   })();
