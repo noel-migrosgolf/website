@@ -529,17 +529,16 @@ ul { list-style: none; margin: 0; padding: 0; }
   content: ""; flex: 1 1 auto; height: 1px; background: var(--border);
 }
 
-/* Bild: mittig unter dem Text, bündig mit dem unteren Rand des Hero */
+/* Bild: mittig unter dem Text, bündig mit dem unteren Rand des Hero.
+   Die Illustration steht frei auf weissem Grund – deshalb ohne Rahmen,
+   Schatten oder Eckenrundung, die sie wie eine Karte wirken liessen. */
 .hero__media {
-  margin: clamp(40px, 7vw, 88px) auto 0;
-  max-width: 1120px;
+  margin: clamp(32px, 5vw, 64px) auto 0;
+  max-width: 1216px;
 }
 .hero__media img {
   display: block;
   width: 100%; height: auto;
-  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
-  box-shadow: var(--shadow-lg);
-  background: var(--surface);
 }
 
 /* =========================================================================
