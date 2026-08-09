@@ -3,7 +3,7 @@
    1) Hero: Gitter-Hintergrund mit Kreis-Ausschnitt an der Mausposition
    2) Header: Dropdown-Menüs
    3) Header: Suchfunktion
-   4) Mobile-Navigation, Signup, Sticky-Header
+   4) Mobile-Navigation, Signup, Einblenden beim Scrollen, Sticky-Header
    ========================================================================= */
 (function () {
   "use strict";
@@ -342,7 +342,7 @@
   })();
 
   /* =======================================================================
-     4) Mobile-Navigation, Signup, Sticky-Header
+     4) Mobile-Navigation, Signup, Einblenden beim Scrollen, Sticky-Header
      ===================================================================== */
   (function initMobileNav() {
     var burger = document.querySelector("[data-burger]");
@@ -382,6 +382,31 @@
       message.textContent = "Danke! Wir haben " + value + " notiert.";
       form.reset();
     });
+  })();
+
+  /* Inhalte unterhalb des Hero blenden sich beim Heranscrollen ein.
+     Die Klasse js-reveal schaltet die CSS-Startwerte frei – ohne
+     JavaScript bleibt alles unverändert sichtbar. */
+  (function initReveal() {
+    var items = Array.prototype.slice.call(document.querySelectorAll(".reveal"));
+    if (!items.length) return;
+
+    if (!("IntersectionObserver" in window)) {
+      items.forEach(function (item) { item.classList.add("is-visible"); });
+      return;
+    }
+
+    document.documentElement.classList.add("js-reveal");
+
+    var observer = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add("is-visible");
+        observer.unobserve(entry.target);
+      });
+    }, { rootMargin: "0px 0px -12% 0px", threshold: 0.1 });
+
+    items.forEach(function (item) { observer.observe(item); });
   })();
 
   (function initStickyHeader() {

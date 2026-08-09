@@ -404,6 +404,18 @@ ul { list-style: none; margin: 0; padding: 0; }
   animation-delay: calc(var(--enter-index, 0) * var(--enter-stagger));
 }
 
+/* Gleiche Bewegung, aber erst beim Heranscrollen – für alles unterhalb
+   des Hero. Ohne JavaScript bleibt der Inhalt sichtbar: die Startwerte
+   greifen nur, wenn app.js die Klasse js-reveal gesetzt hat. */
+.js-reveal .reveal {
+  opacity: 0;
+  transform: translateY(var(--enter-shift));
+  transition: opacity var(--enter-duration) var(--enter-ease),
+              transform var(--enter-duration) var(--enter-ease);
+  transition-delay: calc(var(--enter-index, 0) * var(--enter-stagger));
+}
+.js-reveal .reveal.is-visible { opacity: 1; transform: none; }
+
 /* =========================================================================
    Hero – Foto auf Gitter-Hintergrund mit Kreis-Ausschnitt
    ========================================================================= */
@@ -531,6 +543,74 @@ ul { list-style: none; margin: 0; padding: 0; }
 }
 
 /* =========================================================================
+   Funktionen – vier Karten mit quadratischem Bild
+   ========================================================================= */
+.feature-grid {
+  background: var(--surface);
+  padding-block: clamp(64px, 9vw, 120px);
+}
+
+.feature-grid__inner {
+  max-width: 1280px;
+  margin-inline: auto;
+  padding-inline: 20px;
+}
+
+.feature-grid__head { max-width: 60ch; margin-bottom: clamp(32px, 4.5vw, 52px); }
+
+.feature-grid__title {
+  margin: 0;
+  font-size: clamp(1.75rem, 4.2vw, 3rem);
+  line-height: 1.08;
+  letter-spacing: -.03em;
+  font-weight: 700;
+  text-wrap: balance;
+}
+
+.feature-grid__lead {
+  margin: 16px 0 0;
+  font-size: clamp(1rem, 1.5vw, 1.25rem);
+  line-height: 1.45;
+  text-wrap: pretty;
+}
+
+.feature-grid__list {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  column-gap: clamp(20px, 2.4vw, 32px);
+  row-gap: clamp(40px, 5vw, 56px);
+}
+
+.feature-card { display: flex; flex-direction: column; }
+
+/* height: auto hebt die Größenangaben im HTML auf – die sind nur da,
+   damit der Platz schon vor dem Laden reserviert ist. */
+.feature-card__media {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  border-radius: 20px;
+  background: var(--surface-sunken);
+}
+
+.feature-card__title {
+  margin: clamp(20px, 2.4vw, 28px) 0 0;
+  font-size: clamp(1.375rem, 2.2vw, 1.75rem);
+  line-height: 1.14;
+  letter-spacing: -.02em;
+  font-weight: 700;
+  text-wrap: balance;
+}
+
+.feature-card__text {
+  margin: 12px 0 0;
+  font-size: 1rem;
+  line-height: 1.5;
+  text-wrap: pretty;
+}
+
+/* =========================================================================
    Breakpoints
    ========================================================================= */
 @media (max-width: 400px) {
@@ -542,9 +622,13 @@ ul { list-style: none; margin: 0; padding: 0; }
   .brand__word { display: inline; }
 }
 
+@media (min-width: 620px) {
+  .feature-grid__list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
 @media (min-width: 768px) {
   .site-header__inner { padding-inline: 32px; }
-  .menu__inner, .hero__inner { padding-inline: 32px; }
+  .menu__inner, .hero__inner, .feature-grid__inner { padding-inline: 32px; }
   .site-header__login { display: inline-flex; }
   .hero__title span { display: block; }   /* feste zwei Zeilen wie im Vorbild */
 }
@@ -553,6 +637,8 @@ ul { list-style: none; margin: 0; padding: 0; }
   .nav { display: block; }
   .burger { display: none; }
   .mobile-nav { display: none !important; }
+
+  .feature-grid__list { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 
   .hero__top {
     grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr);
