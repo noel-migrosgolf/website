@@ -218,12 +218,21 @@
         </form>
       </div>
 
-      <!-- Bild mittig unten; der Gitter-Effekt reicht bis an dessen Unterkante. -->
-      <figure class="hero__media fade-up" style="--enter-index: 3">
-        <img src="assets/img/hero-workflow.svg"
-             alt="Ein Ablauf von der Anfrage über Regel, Assistent und Freigabe bis zur Auswertung"
-             width="1965" height="785" loading="eager" decoding="async">
-      </figure>
+      <!-- Bildsequenz mittig unten; der Gitter-Effekt reicht bis an deren Unterkante.
+           Das Standbild ist zugleich Startbild und Rückfallebene: ohne
+           JavaScript, bei reduzierter Bewegung oder wenn GSAP fehlt, bleibt
+           es stehen. Sobald der erste Frame auf dem Canvas liegt, übernimmt
+           dieses und die Bühne wird beim Scrollen angeheftet. -->
+      <div class="hero__sequence fade-up" style="--enter-index: 3" data-sequence>
+        <div class="hero__stage" data-sequence-stage>
+          <img class="hero__poster" src="assets/frames/hero-0001.jpg"
+               alt="Ein Ablauf von der Anfrage über Postfach, Tabelle und Prüfung bis zur Auswertung"
+               width="1280" height="720" loading="eager" decoding="async" data-sequence-poster>
+          <canvas class="hero__canvas" width="1280" height="720" data-sequence-canvas
+                  role="img"
+                  aria-label="Beim Scrollen verbinden sich die Stationen des Ablaufs Schritt für Schritt zu einer durchgehenden Automatisierung"></canvas>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -290,6 +299,11 @@
   </section>
 </main>
 
+<!-- GSAP liegt lokal im Projekt – wie die Schriften, damit die Seite ohne
+     fremdes CDN auskommt. Beide Dateien laufen vor app.js, weil defer die
+     Reihenfolge einhält. -->
+<script src="assets/js/vendor/gsap.min.js" defer></script>
+<script src="assets/js/vendor/ScrollTrigger.min.js" defer></script>
 <script src="assets/js/app.js" defer></script>
 </body>
 </html>

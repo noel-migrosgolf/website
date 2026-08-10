@@ -529,16 +529,61 @@ ul { list-style: none; margin: 0; padding: 0; }
   content: ""; flex: 1 1 auto; height: 1px; background: var(--border);
 }
 
-/* Bild: mittig unter dem Text, bündig mit dem unteren Rand des Hero.
-   Die Illustration steht frei auf weissem Grund – deshalb ohne Rahmen,
+/* Bildsequenz: mittig unter dem Text, bündig mit dem unteren Rand des Hero.
+   Die Illustration steht frei auf hellem Grund – deshalb ohne Rahmen,
    Schatten oder Eckenrundung, die sie wie eine Karte wirken liessen. */
-.hero__media {
+.hero__sequence {
   margin: clamp(32px, 5vw, 64px) auto 0;
   max-width: 1216px;
 }
-.hero__media img {
+
+.hero__stage { display: grid; }
+
+/* Standbild, Canvas und der Weichzeichner darüber teilen sich dieselbe
+   Rasterzelle und damit exakt dieselbe Box. Sichtbar ist immer nur eines
+   von beiden Bildern. */
+.hero__poster,
+.hero__canvas,
+.hero__stage::after {
+  grid-area: 1 / 1;
+  justify-self: center;
+  align-self: center;
   display: block;
-  width: 100%; height: auto;
+  width: 100%;
+  height: auto;
+  max-height: 100%;
+  aspect-ratio: 16 / 9;
+}
+
+/* Grundton der Frames – verhindert ein Aufblitzen vor dem ersten Bild. */
+.hero__poster,
+.hero__canvas { background: #E7EDED; }
+
+.hero__canvas { display: none; }
+
+/* Die Frames bringen einen hellgrauen Grund mit, die Seite ist weiss.
+   Ohne Übergang stünde ein hartes Rechteck auf der Seite. Zwei
+   übereinandergelegte Verläufe lassen die Ränder ins Weiss auslaufen:
+   seitlich knapp, weil dort die äusseren Kreise sitzen, oben und unten
+   grosszügig, weil die Frames dort nur Fläche zeigen. */
+.hero__stage::after {
+  content: "";
+  pointer-events: none;
+  background:
+    linear-gradient(to right,  var(--hero-bg), transparent 4%, transparent 96%, var(--hero-bg)),
+    linear-gradient(to bottom, var(--hero-bg), transparent 15%, transparent 85%, var(--hero-bg));
+}
+
+/* Erst wenn der erste Frame gezeichnet ist, übernimmt der Canvas. Ab da
+   ist die Bühne fensterhoch: So viel Platz braucht der angeheftete
+   Abschnitt, durch den gescrollt wird. Der Innenabstand oben hält die
+   Sequenz unter der Kopfzeile. */
+.hero__sequence.is-aktiv .hero__poster { display: none; }
+.hero__sequence.is-aktiv .hero__canvas { display: block; }
+.hero__sequence.is-aktiv .hero__stage {
+  height: 100svh;
+  padding-top: var(--header-height);
+  place-items: center;
 }
 
 /* =========================================================================
@@ -619,6 +664,13 @@ ul { list-style: none; margin: 0; padding: 0; }
 
 @media (min-width: 520px) {
   .brand__word { display: inline; }
+}
+
+/* Auf schmalen Displays zählt jeder Pixel Breite: die Sequenz läuft bis an
+   den Rand, statt sich dem Innenabstand des Hero zu beugen. Die weich
+   auslaufenden Kanten machen das unauffällig. */
+@media (max-width: 619px) {
+  .hero__sequence { margin-inline: -20px; }
 }
 
 @media (min-width: 620px) {
