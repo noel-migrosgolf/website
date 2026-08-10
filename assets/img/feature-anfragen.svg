@@ -1,0 +1,87 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1256 1256" width="600" height="600" role="img" aria-label="Anfrage, KI-Verarbeitung und Bestätigung als dreistufiger Ablauf">
+  <!-- Kein eigener Hintergrund: die Kachelfarbe aus dem Stylesheet
+       scheint durch, damit die Karte im Vierersatz das gleiche Gewicht
+       hat wie ihre Nachbarn. -->
+
+  <!-- Wolken und Streuformen im Hintergrund -->
+  <g fill="#E4E4E4">
+    <rect x="182" y="298" width="218" height="27" rx="13"/>
+    <circle cx="240" cy="292" r="40"/>
+    <circle cx="300" cy="274" r="50"/>
+    <circle cx="360" cy="294" r="34"/>
+
+    <rect x="888" y="333" width="147" height="24" rx="12"/>
+    <circle cx="925" cy="330" r="29"/>
+    <circle cx="968" cy="318" r="36"/>
+    <circle cx="1010" cy="332" r="25"/>
+  </g>
+
+  <g fill="#C6C6C6">
+    <g>
+      <circle cx="1112" cy="322" r="5"/><circle cx="1136" cy="322" r="5"/><circle cx="1160" cy="322" r="5"/><circle cx="1184" cy="322" r="5"/>
+      <circle cx="1112" cy="346" r="5"/><circle cx="1136" cy="346" r="5"/><circle cx="1160" cy="346" r="5"/><circle cx="1184" cy="346" r="5"/>
+      <circle cx="1112" cy="370" r="5"/><circle cx="1136" cy="370" r="5"/><circle cx="1160" cy="370" r="5"/><circle cx="1184" cy="370" r="5"/>
+      <circle cx="1112" cy="394" r="5"/><circle cx="1136" cy="394" r="5"/><circle cx="1160" cy="394" r="5"/><circle cx="1184" cy="394" r="5"/>
+    </g>
+    <g>
+      <circle cx="104" cy="918" r="5"/><circle cx="128" cy="918" r="5"/><circle cx="152" cy="918" r="5"/><circle cx="176" cy="918" r="5"/>
+      <circle cx="104" cy="942" r="5"/><circle cx="128" cy="942" r="5"/><circle cx="152" cy="942" r="5"/><circle cx="176" cy="942" r="5"/>
+      <circle cx="104" cy="966" r="5"/><circle cx="128" cy="966" r="5"/><circle cx="152" cy="966" r="5"/><circle cx="176" cy="966" r="5"/>
+    </g>
+  </g>
+
+  <path d="M655 258 701 272 672 307Z" fill="none" stroke="#F4514E" stroke-width="4" stroke-linejoin="round"/>
+  <circle cx="122" cy="418" r="15" fill="none" stroke="#2F6BFF" stroke-width="4"/>
+  <circle cx="1077" cy="887" r="15" fill="none" stroke="#F4514E" stroke-width="4"/>
+  <path d="M463 906 482 942 444 942Z" fill="#FBC02D"/>
+  <g stroke="#FBC02D" stroke-width="4" stroke-linecap="round">
+    <path d="M916 942h18M925 933v18"/>
+  </g>
+  <path d="M710 1032c0-26 35-26 35 0 0-26 37-26 37 0" fill="none" stroke="#2F6BFF" stroke-width="4" stroke-linecap="round"/>
+
+  <!-- Die drei Stationen -->
+  <g fill="#FFFFFF" stroke="#1F1F1F" stroke-width="3">
+    <circle cx="228" cy="628" r="143"/>
+    <circle cx="628" cy="628" r="143"/>
+    <circle cx="1028" cy="628" r="143"/>
+  </g>
+
+  <!-- Pfeile zwischen den Stationen -->
+  <g fill="none" stroke="#1F1F1F" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M380 628h92"/>
+    <path d="M458 616l16 12-16 12"/>
+    <path d="M780 628h92"/>
+    <path d="M858 616l16 12-16 12"/>
+  </g>
+
+  <!-- 1) Eingehende Anfrage -->
+  <path d="M152 575h152l-76 87Z" fill="#FBC02D"/>
+  <rect x="152" y="575" width="152" height="112" rx="6" fill="none" stroke="#1F1F1F" stroke-width="3"/>
+  <circle cx="298" cy="577" r="30" fill="#F4514E"/>
+  <g fill="#BDBDBD">
+    <rect x="203" y="719" width="52" height="7" rx="3.5"/>
+    <rect x="211" y="735" width="36" height="7" rx="3.5"/>
+  </g>
+
+  <!-- 2) Automatische Verarbeitung -->
+  <g fill="#FFFFFF" stroke="#1F1F1F" stroke-width="3">
+    <rect x="544" y="620" width="20" height="38" rx="9"/>
+    <rect x="692" y="620" width="20" height="38" rx="9"/>
+    <rect x="560" y="588" width="136" height="106" rx="24"/>
+    <rect x="602" y="694" width="52" height="24" rx="5"/>
+  </g>
+  <path d="M628 588v-34" fill="none" stroke="#1F1F1F" stroke-width="3" stroke-linecap="round"/>
+  <circle cx="628" cy="543" r="15" fill="#2F6BFF"/>
+  <rect x="582" y="612" width="92" height="52" rx="26" fill="#16213E"/>
+  <circle cx="606" cy="638" r="11" fill="#2F6BFF"/>
+  <circle cx="650" cy="638" r="11" fill="#2F6BFF"/>
+  <g fill="#2F6BFF">
+    <path d="M692 538c0 12 6 18 18 18-12 0-18 6-18 18 0-12-6-18-18-18 12 0 18-6 18-18Z"/>
+    <path d="M725 578c0 9 4 13 13 13-9 0-13 4-13 13 0-9-4-13-13-13 9 0 13-4 13-13Z"/>
+  </g>
+
+  <!-- 3) Erledigt -->
+  <path d="M999.5 734.3A110 110 0 1 1 1131.4 665.6" fill="none" stroke="#1F1F1F" stroke-width="3" stroke-linecap="round"/>
+  <circle cx="1028" cy="628" r="82" fill="#E3EAFD"/>
+  <path d="M985 630l31 32 60-66" fill="none" stroke="#2F6BFF" stroke-width="26" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
