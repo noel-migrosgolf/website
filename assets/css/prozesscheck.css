@@ -898,7 +898,10 @@ textarea.wz-input { height: auto; padding: 10px 12px; }
   .wz-nav {
     position: sticky; bottom: 0; z-index: 10;
     margin-inline: calc(clamp(24px, 4vw, 40px) * -1);
-    margin-bottom: calc(clamp(24px, 4vw, 40px) * -1);
+    /* Kein negatives Margin nach unten: .pc-form hat hier bereits kein
+       Polster mehr. Sonst ragte die Leiste über die Karte hinaus und zog
+       den Hinweis darunter bis auf null Abstand heran. */
+    margin-bottom: 0;
     padding: 14px clamp(24px, 4vw, 40px);
     background: var(--surface);
     border-top: 1px solid var(--border);
@@ -906,6 +909,10 @@ textarea.wz-input { height: auto; padding: 10px 12px; }
   }
   .wz-nav .btn { min-height: 44px; }
   .pc-form { padding-bottom: 0; }
+
+  /* Auf dem Handy steht der Hinweis direkt unter der Karte – etwas mehr
+     Luft als auf dem Desktop, damit er nicht daran klebt. */
+  .pc-trust { margin-top: 28px; }
   .wz-textarea__fuss { flex-wrap: wrap; }
 }
 
