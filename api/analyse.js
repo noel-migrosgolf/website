@@ -13,7 +13,8 @@ import { bereinigeAnalyse } from "./_lib/bereinigen.js";
 import { berechne } from "./_lib/rechnen.js";
 import { pruefe, ipVon } from "./_lib/ratelimit.js";
 import {
-  antworte, fehler, leseKoerper, begrenze, begrenzeListe, protokolliere
+  antworte, fehler, leseKoerper, begrenze, begrenzeListe, protokolliere,
+  istGleicherUrsprung
 } from "./_lib/http.js";
 
 const HAEUFIGKEITEN = [
@@ -56,6 +57,7 @@ export default async function handler(req, res) {
   const start = Date.now();
 
   if (req.method !== "POST") return fehler(res, 405, "methode");
+  if (!istGleicherUrsprung(req)) return fehler(res, 403, "herkunft");
 
   if (!schluesselVorhanden()) {
     protokolliere("analyse", start, 503, { grund: "kein_schluessel" });

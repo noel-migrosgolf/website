@@ -1,0 +1,3 @@
+Contact: mailto:kontakt@1automationen.ch
+Preferred-Languages: de, en
+Expires: 2027-08-20T23:59:59Z

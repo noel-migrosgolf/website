@@ -231,6 +231,19 @@
       if (feld) { feld.setAttribute("aria-invalid", "true"); feld.focus(); }
       return false;
     }
+    if (nummer === 2) {
+      var kiHinweis = el('input[name="ki-hinweis"]', wizard);
+      var kiFehler = el("#wz-ki-hinweis-fehler", wizard);
+      if (!kiHinweis || !kiHinweis.checked) {
+        if (kiFehler) {
+          kiFehler.textContent = "Bitte bestätige den Datenschutzhinweis, bevor die KI-Analyse startet.";
+          kiFehler.hidden = false;
+        }
+        if (kiHinweis) kiHinweis.focus();
+        return false;
+      }
+      if (kiFehler) { kiFehler.textContent = ""; kiFehler.hidden = true; }
+    }
     return true;
   }
 
@@ -336,6 +349,7 @@
      4) Schritt 2: Beschreibung
      ===================================================================== */
   var feldBeschreibung = el("[data-beschreibung]");
+  var feldKiHinweis = el('input[name="ki-hinweis"]', wizard);
 
   var BEISPIEL = "Eine Kundenanfrage kommt per E-Mail bei mir an. Ich lese sie durch " +
     "und prüfe, ob alle Angaben vollständig sind. Danach übertrage ich Name, Adresse " +
@@ -504,12 +518,14 @@
 
   function planeErkennung() {
     clearTimeout(erkennungTimer);
+    if (!feldKiHinweis || !feldKiHinweis.checked) return;
     if (feldBeschreibung.value.trim().length < 140) return;
     erkennungTimer = setTimeout(function () { erkenneJetzt(false); }, 1200);
   }
 
   function erkenneJetzt(blockierend) {
     if (!feldBeschreibung) return Promise.resolve();
+    if (!feldKiHinweis || !feldKiHinweis.checked) return Promise.resolve();
 
     var text = feldBeschreibung.value.trim();
     if (text.length < 60) return Promise.resolve();
@@ -560,6 +576,18 @@
         erkennungLaeuft = false;
         if (spinnerVerstanden) spinnerVerstanden.hidden = true;
       });
+  }
+
+  if (feldKiHinweis) {
+    feldKiHinweis.addEventListener("change", function () {
+      var fehler = el("#wz-ki-hinweis-fehler");
+      if (fehler) {
+        fehler.textContent = feldKiHinweis.checked ? "" :
+          "Bitte bestätige den Datenschutzhinweis, bevor die KI-Analyse startet.";
+        fehler.hidden = feldKiHinweis.checked;
+      }
+      if (feldKiHinweis.checked) planeErkennung();
+    });
   }
 
   function uebernehmeErkennung(daten) {
@@ -1244,6 +1272,21 @@
       teil.appendChild(block(null, hinweise));
     }
 
+    /* --- Transparenz zur automatisierten Auswertung ---------------------- */
+    var aiHinweis = erzeuge("div", "wz-ai-disclaimer");
+    aiHinweis.appendChild(piktogramm("pi-info", 18));
+    var aiText = erzeuge("p");
+    aiText.appendChild(document.createTextNode(
+      "Diese Auswertung wurde automatisiert mit KI erstellt. Angaben zu Potenzial, " +
+      "Aufwand und Umsetzbarkeit sind unverbindliche Schätzungen und können " +
+      "unvollständig oder fehlerhaft sein. "
+    ));
+    var aiLink = erzeuge("a", null, "Mehr zum Prozesscheck und Datenschutz");
+    aiLink.href = "/datenschutz.html#prozesscheck";
+    aiText.appendChild(aiLink);
+    aiHinweis.appendChild(aiText);
+    teil.appendChild(aiHinweis);
+
     /* --- Nebenaktionen ----------------------------------------------------- */
     var neben = erzeuge("div", "wz-neben");
 
@@ -1537,7 +1580,6 @@
           website: el("#lead-website").value,
           einverstanden: true,
           verweildauer_ms: ergebnisZeitpunkt ? Date.now() - ergebnisZeitpunkt : 99999,
-          referrer: document.referrer || "",
           eingabe: {
             ziele: zustand.ziele,
             beschreibung: zustand.beschreibung,

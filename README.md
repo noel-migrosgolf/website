@@ -89,8 +89,11 @@ setzen, nicht als Datei ausliefern.
 | `OPENAI_MODEL` | Modell für die Analyse in Schritt 5 |
 | `OPENAI_MODEL_FAST` | Modell für die Ablauf-Erkennung in Schritt 2 |
 | `OPENAI_BASE_URL` | Für europäische Datenhaltung auf `https://eu.api.openai.com/v1` setzen |
+| `PUBLIC_ORIGIN` | Exakte öffentliche Basisadresse für die Herkunftsprüfung der API-Aufrufe |
+| `TRUST_PROXY` | Auf Render `1`; vertraut dort dem vorgeschalteten Proxy für die Ratenbegrenzung |
 | `LEAD_EMPFAENGER` | Empfängeradresse der Anfragen |
-| `RESEND_API_KEY` | Optional. Ohne Schlüssel landen Anfragen nur in `data/leads.jsonl`. |
+| `RESEND_API_KEY` | Für produktive Kontaktanfragen erforderlich |
+| `LEAD_DATEI_SPEICHERN` | Standard `false`; nur nach bewusster Schutz- und Löschregel aktivieren |
 | `RATE_LIMIT_*` | Aufrufe je IP und Stunde |
 
 ### Deployment auf Render
@@ -106,7 +109,7 @@ gibt, der sie lesen könnte.
 | Build Command | `npm install` |
 | Start Command | `node server.js` |
 | Health Check Path | `/api/status` |
-| Environment Variables | mindestens `OPENAI_API_KEY`, dazu `LEAD_EMPFAENGER` |
+| Environment Variables | mindestens `OPENAI_API_KEY`, `PUBLIC_ORIGIN`, `LEAD_EMPFAENGER` und `RESEND_API_KEY` |
 
 Das Projekt hat keine Abhängigkeiten. `npm install` installiert also nichts,
 läuft aber sauber durch und erfüllt Renders Pflichtfeld für den Build.
@@ -122,10 +125,9 @@ sie beim Anlegen ab und speichert sie verschlüsselt — im Repository landen si
 nie.
 
 > **Free-Plan:** Der Dienst wird nach Leerlauf angehalten, der erste Aufruf
-> danach dauert einige Sekunden. Ausserdem ist das Dateisystem nicht dauerhaft
-> — ohne `RESEND_API_KEY` gehen die Anfragen aus `data/leads.jsonl` beim
-> nächsten Deployment verloren. Für den produktiven Betrieb den Mailversand
-> einrichten.
+> danach dauert einige Sekunden. Das Dateisystem ist nicht dauerhaft und die
+> zusätzliche Lead-Datei bleibt daher standardmässig deaktiviert. Für den
+> produktiven Betrieb den Mailversand einrichten.
 
 ### Fehlersuche nach dem Deployment
 
@@ -140,12 +142,10 @@ curl -s https://DEINE-DOMAIN/api/status
 | --- | --- | --- |
 | JSON mit `"ok": true` | Der Dienst läuft. Weiter mit der Logzeile unten. | – |
 | HTML oder 404 | Die Seite wird als reine Statik ausgeliefert, es läuft kein Node. | Als **Web Service** deployen, nicht als Static Site. Start-Befehl `node server.js`, kein Build-Schritt nötig. |
-| `"schluessel_gesetzt": false` | Die Umgebungsvariable kommt nicht an. | Namen prüfen (`OPENAI_API_KEY`), danach neu deployen — Variablen werden erst beim Start gelesen. |
 
-`/api/status` gibt den Schlüssel nie aus, nur Länge und Präfix. Daran erkennt
-man einen abgeschnittenen oder mit Leerzeichen eingefügten Wert:
-`schluessel_praefix` sollte `sk-proj` oder `sk-` sein, `schluessel_sauber`
-muss `true` sein.
+Der öffentliche Healthcheck zeigt absichtlich keine Konfigurationsdetails.
+Fehlende oder fehlerhafte Umgebungsvariablen werden ausschliesslich in den
+geschützten Render-Logs geprüft.
 
 Läuft der Dienst und ist der Schlüssel gesetzt, steht der Grund in der
 Logzeile des fehlgeschlagenen Aufrufs:
@@ -207,9 +207,10 @@ den Antworten der KI: `api/_lib/bereinigen.js` entfernt sie vorsorglich.
 * Die Modellbezeichnung in `.env.example` stammt aus der Konzeptphase und ist
   bewusst als Umgebungsvariable gehalten. **Vor dem Livegang gegen die
   aktuelle OpenAI-Dokumentation prüfen.**
-* Impressum, Datenschutzerklärung und Kontaktseite sind in
-  `prozesscheck.html` als Anker verlinkt, aber noch nicht geschrieben. Die
-  Einverständnisformulierung gehört juristisch geprüft.
+* Die blau markierten Platzhalter in `impressum.html` und
+  `datenschutz.html` müssen vor dem Livegang mit den tatsächlichen Firmen-,
+  Vertrags-, Datenregions- und Löschangaben ergänzt werden. Die Rechtstexte
+  sollten abschliessend juristisch geprüft werden.
 * Die Ratenbegrenzung liegt im Arbeitsspeicher und wirkt auf serverlosem
   Hosting je Instanz. Für harte Grenzen `pruefe()` in
   `api/_lib/ratelimit.js` gegen einen gemeinsamen Zähldienst tauschen.

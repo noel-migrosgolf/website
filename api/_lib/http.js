@@ -6,7 +6,27 @@
 export function setzeKopfzeilen(res) {
   res.setHeader("Content-Type", "application/json; charset=utf-8");
   res.setHeader("X-Content-Type-Options", "nosniff");
+  res.setHeader("X-Frame-Options", "DENY");
+  res.setHeader("Referrer-Policy", "strict-origin-when-cross-origin");
+  res.setHeader("Permissions-Policy", "camera=(), geolocation=(), payment=(), usb=()");
   res.setHeader("Cache-Control", "no-store");
+}
+
+/** Verwirft browserseitige POST-Aufrufe von fremden Websites. */
+export function istGleicherUrsprung(req) {
+  const fetchSite = String(req.headers["sec-fetch-site"] || "").toLowerCase();
+  if (fetchSite && !["same-origin", "same-site", "none"].includes(fetchSite)) return false;
+
+  const ursprung = req.headers.origin;
+  if (!ursprung) return true; // Server-zu-Server und ältere Clients
+
+  const konfiguriert = String(process.env.PUBLIC_ORIGIN || "").replace(/\/$/, "");
+  if (konfiguriert) return ursprung === konfiguriert;
+
+  const host = req.headers["x-forwarded-host"] || req.headers.host;
+  if (!host) return false;
+  const protokoll = req.headers["x-forwarded-proto"] || (req.socket?.encrypted ? "https" : "http");
+  return ursprung === `${protokoll}://${host}`;
 }
 
 export function antworte(res, status, daten) {

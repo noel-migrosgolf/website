@@ -595,6 +595,7 @@ ul { list-style: none; margin: 0; padding: 0; }
   color: var(--text-muted);
   text-wrap: pretty;
 }
+.frage__text a { color: var(--brand); text-decoration: underline; text-underline-offset: 2px; }
 
 /* =========================================================================
    Abschluss – die Handlungsaufforderung ein zweites Mal

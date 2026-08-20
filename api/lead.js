@@ -8,7 +8,9 @@
 
 import { speichereLead } from "./_lib/lead-ziel.js";
 import { pruefe, ipVon } from "./_lib/ratelimit.js";
-import { antworte, fehler, leseKoerper, begrenze, protokolliere } from "./_lib/http.js";
+import {
+  antworte, fehler, leseKoerper, begrenze, protokolliere, istGleicherUrsprung
+} from "./_lib/http.js";
 
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
@@ -16,6 +18,7 @@ export default async function handler(req, res) {
   const start = Date.now();
 
   if (req.method !== "POST") return fehler(res, 405, "methode");
+  if (!istGleicherUrsprung(req)) return fehler(res, 403, "herkunft");
 
   let koerper;
   try {
@@ -59,11 +62,10 @@ export default async function handler(req, res) {
 
   const daten = {
     zeitpunkt: new Date().toISOString(),
+    datenschutz_version: "2026-08-20",
     kontakt,
     eingabe: koerper.eingabe || null,
-    ergebnis: koerper.ergebnis || null,
-    referrer: begrenze(koerper.referrer, 300),
-    ip: ipVon(req)
+    ergebnis: koerper.ergebnis || null
   };
 
   const ziel = await speichereLead(daten);

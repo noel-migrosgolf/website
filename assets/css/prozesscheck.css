@@ -189,6 +189,25 @@ svg use {
 }
 .wz-step__body { margin-top: clamp(20px, 3vw, 28px); }
 
+.wz-privacy-notice {
+  display: flex;
+  gap: 12px;
+  margin-top: 18px;
+  padding: 14px 16px;
+  border: 1px solid color-mix(in srgb, var(--brand) 24%, var(--border));
+  border-radius: var(--radius-md);
+  background: var(--brand-soft);
+  color: var(--text-muted);
+  font-size: .875rem;
+}
+.wz-privacy-notice > svg { flex: 0 0 auto; margin-top: 2px; color: var(--brand); }
+.wz-privacy-notice p { margin: 0; }
+.wz-privacy-notice__title { color: var(--text); font-weight: 700; }
+.wz-privacy-notice__title + p { margin-top: 4px; }
+.wz-privacy-notice a,
+.wz-ai-disclaimer a,
+.pc-trust a { color: var(--brand); text-decoration: underline; text-underline-offset: 2px; }
+
 .wz-step__error {
   display: flex; align-items: center; gap: 8px;
   margin: 16px 0 0;
@@ -847,6 +866,12 @@ textarea.wz-input { height: auto; padding: 10px 12px; }
 .wz-consent { display: flex; gap: 10px; margin-top: 18px; font-size: .875rem; cursor: pointer; }
 .wz-consent input { flex: 0 0 auto; margin-top: 3px; width: 17px; height: 17px; accent-color: var(--brand); }
 .wz-consent a { color: var(--brand); text-decoration: underline; }
+.wz-consent--analysis {
+  padding: 13px 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--surface-sunken);
+}
 
 .wz-datenschutz {
   display: flex; gap: 8px;
@@ -854,6 +879,20 @@ textarea.wz-input { height: auto; padding: 10px 12px; }
   font-size: .8125rem; color: var(--text-muted);
 }
 .wz-datenschutz svg { flex: 0 0 auto; margin-top: 2px; }
+
+.wz-ai-disclaimer {
+  display: flex;
+  gap: 10px;
+  margin-top: 18px;
+  padding: 14px 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--surface-sunken);
+  color: var(--text-muted);
+  font-size: .8125rem;
+}
+.wz-ai-disclaimer > svg { flex: 0 0 auto; margin-top: 2px; color: var(--brand); }
+.wz-ai-disclaimer p { margin: 0; }
 
 .wz-lead__actions { margin-top: 20px; }
 .wz-lead__message { margin: 10px 0 0; min-height: 1.2em; font-size: .875rem; font-weight: 500; }

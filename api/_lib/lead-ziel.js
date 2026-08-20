@@ -19,12 +19,16 @@ const ABLAGE = "data/leads.jsonl";
 export async function speichereLead(daten) {
   const ergebnis = { datei: false, mail: false };
 
-  try {
-    await mkdir(dirname(ABLAGE), { recursive: true });
-    await appendFile(ABLAGE, JSON.stringify(daten) + "\n", "utf8");
-    ergebnis.datei = true;
-  } catch (fehler) {
-    console.error("Lead konnte nicht abgelegt werden:", fehler.message);
+  // Eine zusätzliche unverschlüsselte Datei entsteht nur nach bewusster
+  // Aktivierung. Im Normalbetrieb ist der E-Mail-Versand das einzige Ziel.
+  if (process.env.LEAD_DATEI_SPEICHERN === "true") {
+    try {
+      await mkdir(dirname(ABLAGE), { recursive: true });
+      await appendFile(ABLAGE, JSON.stringify(daten) + "\n", "utf8");
+      ergebnis.datei = true;
+    } catch (fehler) {
+      console.error("Lead konnte nicht abgelegt werden:", fehler.message);
+    }
   }
 
   try {

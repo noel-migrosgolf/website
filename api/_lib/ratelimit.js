@@ -52,8 +52,17 @@ export function pruefe(kennung, bereich, grenze) {
 
 /** Liest die IP aus den üblichen Proxy-Kopfzeilen. */
 export function ipVon(req) {
-  const weiter = req.headers["x-forwarded-for"];
-  if (typeof weiter === "string" && weiter) return weiter.split(",")[0].trim();
-  if (Array.isArray(weiter) && weiter.length) return String(weiter[0]).split(",")[0].trim();
-  return req.headers["x-real-ip"] || req.socket?.remoteAddress || "unbekannt";
+  // Proxy-Kopfzeilen nur auf dem dafür konfigurierten Hosting vertrauen.
+  // Der letzte Eintrag ist der Client vor dem direkt vertrauten Proxy und
+  // verhindert, dass ein vorgeschobener erster Wert das Limit umgeht.
+  if (process.env.TRUST_PROXY === "1") {
+    const weiter = req.headers["x-forwarded-for"];
+    const teile = Array.isArray(weiter)
+      ? weiter.flatMap((wert) => String(wert).split(","))
+      : String(weiter || "").split(",");
+    const kandidat = teile.map((wert) => wert.trim()).filter(Boolean).at(-1);
+    if (kandidat) return kandidat.slice(0, 80);
+    if (req.headers["x-real-ip"]) return String(req.headers["x-real-ip"]).slice(0, 80);
+  }
+  return String(req.socket?.remoteAddress || "unbekannt").slice(0, 80);
 }

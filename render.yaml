@@ -20,8 +20,8 @@ services:
     buildCommand: npm install
     startCommand: node server.js
 
-    # Render prüft darüber, ob der Dienst lebt. Der Endpunkt gibt nur
-    # Konfigurationsfakten aus, nie den Schlüssel.
+    # Render prüft darüber, ob der Dienst lebt. Der öffentliche Endpunkt
+    # gibt bewusst keine internen Konfigurationsdetails aus.
     healthCheckPath: /api/status
 
     envVars:
@@ -42,14 +42,21 @@ services:
       - key: OPENAI_BASE_URL
         value: https://api.openai.com/v1
 
+      # Exakte Live-Adresse, z.B. https://www.1automationen.ch
+      - key: PUBLIC_ORIGIN
+        sync: false
+      - key: TRUST_PROXY
+        value: "1"
+
       # Empfänger der Anfragen aus dem Kontaktformular.
       - key: LEAD_EMPFAENGER
         sync: false
 
-      # Optional. Ohne diesen Schlüssel landen Anfragen nur in der Datei
-      # data/leads.jsonl – die ist auf dem Free-Plan nicht dauerhaft.
+      # Für produktive Kontaktanfragen erforderlich.
       - key: RESEND_API_KEY
         sync: false
+      - key: LEAD_DATEI_SPEICHERN
+        value: "false"
 
       - key: NODE_VERSION
         value: "22"

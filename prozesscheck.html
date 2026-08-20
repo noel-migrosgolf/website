@@ -251,6 +251,20 @@
           Je genauer, desto besser die Analyse.
         </p>
 
+        <div class="wz-privacy-notice" role="note">
+          <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><use href="#pi-lock"/></svg>
+          <div>
+            <p class="wz-privacy-notice__title">Bitte keine vertraulichen Daten eingeben</p>
+            <p>
+              Die Beschreibung wird bereits während dieses Schritts an unseren
+              KI-Dienstleister übermittelt und vorübergehend in deinem Browser
+              gespeichert. Verwende keine Namen, Kontaktdaten, Passwörter,
+              Gesundheitsdaten oder Geschäftsgeheimnisse.
+              <a href="/datenschutz.html#prozesscheck">Mehr zum Datenschutz</a>
+            </p>
+          </div>
+        </div>
+
         <div class="wz-step__body">
           <label class="visually-hidden" for="wz-beschreibung">Beschreibung deines Ablaufs</label>
           <textarea class="wz-textarea" id="wz-beschreibung" name="beschreibung" rows="7"
@@ -286,6 +300,15 @@
               <li>Was ist am Ende das Ergebnis?</li>
             </ul>
           </details>
+
+          <label class="wz-consent wz-consent--analysis">
+            <input type="checkbox" name="ki-hinweis" required aria-describedby="wz-ki-hinweis-fehler">
+            <span>
+              Ich habe den Hinweis gelesen und bin mit der Übermittlung meiner
+              Prozessbeschreibung zur KI-Analyse einverstanden.
+            </span>
+          </label>
+          <span class="wz-field__error" id="wz-ki-hinweis-fehler" hidden></span>
 
           <!-- KI-Rückmeldung -->
           <div class="wz-understood" data-understood hidden>
@@ -493,7 +516,7 @@
             <span>
               Ich bin einverstanden, dass 1Automationen meine Angaben zur
               Bearbeitung meiner Anfrage verwendet.
-              <a href="#datenschutz">Datenschutzerklärung</a>
+              <a href="/datenschutz.html">Datenschutzerklärung</a>
             </span>
           </label>
           <span class="wz-field__error" id="lead-consent-fehler" hidden></span>
@@ -501,9 +524,9 @@
           <p class="wz-datenschutz">
             <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><use href="#pi-lock"/></svg>
             <span>
-              Wir nutzen deine Angaben ausschliesslich, um deinen Prozess zu besprechen.
-              Keine Weitergabe an Dritte. Zur Analyse wird deine Prozessbeschreibung
-              an unseren KI-Dienstleister übermittelt.
+              Wir verwenden deine Angaben zur Bearbeitung deiner Anfrage. Für
+              Hosting, KI-Analyse und E-Mail-Versand werden die in der
+              Datenschutzerklärung genannten Dienstleister eingesetzt.
             </span>
           </p>
 
@@ -546,8 +569,9 @@
   <!-- Vertrauen -->
   <div class="pc-trust">
     <p>
-      Deine Angaben bleiben bei uns und dienen ausschliesslich der Einschätzung
-      deines Prozesses. Erst am Ende entscheidest du, ob du uns kontaktieren möchtest.
+      Deine Kontaktdaten werden erst übermittelt, wenn du das Ergebnis freiwillig
+      abschickst. Die Prozessbeschreibung wird für die KI-Analyse verarbeitet.
+      Details findest du in der <a href="/datenschutz.html">Datenschutzerklärung</a>.
     </p>
   </div>
 </main>
@@ -557,9 +581,9 @@
     <p class="pc-footer__brand">1Automationen</p>
     <ul class="pc-footer__links">
       <li><a href="/">Startseite</a></li>
-      <li><a href="#impressum">Impressum</a></li>
-      <li><a href="#datenschutz">Datenschutz</a></li>
-      <li><a href="#kontakt">Kontakt</a></li>
+      <li><a href="/impressum.html">Impressum</a></li>
+      <li><a href="/datenschutz.html">Datenschutz</a></li>
+      <li><a href="mailto:kontakt@1automationen.ch">Kontakt</a></li>
     </ul>
   </div>
 </footer>

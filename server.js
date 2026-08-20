@@ -32,6 +32,22 @@ const TYPEN = {
   ".ico":  "image/x-icon"
 };
 
+function setzeSicherheitsKopfzeilen(res) {
+  res.setHeader("X-Content-Type-Options", "nosniff");
+  res.setHeader("X-Frame-Options", "DENY");
+  res.setHeader("Referrer-Policy", "strict-origin-when-cross-origin");
+  res.setHeader("Strict-Transport-Security", "max-age=31536000");
+  res.setHeader("Permissions-Policy", "camera=(), geolocation=(), payment=(), usb=()");
+  res.setHeader("Cross-Origin-Opener-Policy", "same-origin");
+  res.setHeader("Cross-Origin-Resource-Policy", "same-origin");
+  res.setHeader(
+    "Content-Security-Policy",
+    "default-src 'self'; base-uri 'none'; object-src 'none'; frame-ancestors 'none'; " +
+    "form-action 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; " +
+    "img-src 'self' data:; font-src 'self'; connect-src 'self'"
+  );
+}
+
 /* --- .env einlesen, ohne Abhängigkeit ---------------------------------- */
 async function ladeEnv() {
   try {
@@ -107,6 +123,7 @@ await ladeEnv();
 await ladeHandler();
 
 createServer(async (req, res) => {
+  setzeSicherheitsKopfzeilen(res);
   const url = new URL(req.url, `http://${req.headers.host || "localhost"}`);
   const handler = HANDLER[url.pathname.replace(/\/$/, "")];
 

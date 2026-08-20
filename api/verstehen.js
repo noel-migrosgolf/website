@@ -13,12 +13,15 @@ import { SYSTEM_PROMPT_VERSTEHEN, baueVerstehenBlock } from "./_lib/prompt.js";
 import { SCHEMA_VERSTEHEN } from "./_lib/schema.js";
 import { bereinigeVerstehen } from "./_lib/bereinigen.js";
 import { pruefe, ipVon } from "./_lib/ratelimit.js";
-import { antworte, fehler, leseKoerper, begrenze, protokolliere } from "./_lib/http.js";
+import {
+  antworte, fehler, leseKoerper, begrenze, protokolliere, istGleicherUrsprung
+} from "./_lib/http.js";
 
 export default async function handler(req, res) {
   const start = Date.now();
 
   if (req.method !== "POST") return fehler(res, 405, "methode");
+  if (!istGleicherUrsprung(req)) return fehler(res, 403, "herkunft");
 
   if (!schluesselVorhanden()) {
     protokolliere("verstehen", start, 503, { grund: "kein_schluessel" });
